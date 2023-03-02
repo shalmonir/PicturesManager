@@ -1,23 +1,24 @@
 from flask import Flask, request, render_template
-
 from Uploader import Uploader
+from Reporter import Reporter
 
 app = Flask(__name__, template_folder='template')
 
 
-@app.route("/")
-def home():
-    return render_template("home_page.html")
-    return render_template("login_page.html")
+@app.route('/')
+@app.route("/login", methods=['POST', 'GET'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        return render_template('home_page.html', msg='Logged in :)')
+    return render_template("login.html")
 
 
 @app.route("/upload", methods=['POST'])
 def upload():
-    files_uploaded, files_uploaded_failed = Uploader.instance().upload(request.files.getlist("file"))  # Wrap with DTO creation
-    files_names = ""
-    for file in request.files.getlist("file"):
-        files_names = files_names + "<br>" + file.filename
-    return "<h1>Files Upload Report</h1><body><b>Pictures Failed</b>:" + \
-           "failed with reason (f.e format is not supported)" + str(files_uploaded_failed) + \
-           "<br><br>" + \
-           "<b>Pictures Succeed</b>:" + files_names + "</body>"
+    request_files = request.files.getlist("file")
+    files_uploaded, files_failed_upload = Uploader.instance().upload(request_files)
+    Reporter.instance().report_upload_process(files_uploaded, files_failed_upload)
+    return render_template("upload_summary.html", successfully=f"{', '.join([str(file) for file in files_uploaded])}",
+                           failed=f"{', '.join([str(file) + '(' + reason + '), ' for file, reason in files_failed_upload.items()])}")
