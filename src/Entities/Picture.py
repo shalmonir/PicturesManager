@@ -7,5 +7,5 @@ class Picture(BaseEntity):
         self.album_id = album_id
         self.file_name = file_name
         self.picture_hash = picture_hash
-        self.local_paths = local_path
+        self.local_path = local_path
         self.upload_id = upload_id
