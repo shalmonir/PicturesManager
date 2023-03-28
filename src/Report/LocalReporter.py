@@ -29,6 +29,3 @@ class LocalReporter(ReporterInterface):
             time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             self.index = self.index + 1
             report.write(f"{self.index} {time} | upload report: success: {files_succeed}, failed: {files_failed}")
-
-
-LocalReporter.get_local_reporter_index()
