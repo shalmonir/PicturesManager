@@ -1,6 +1,7 @@
 import os
-from typing import List
 from datetime import datetime
+from typing import List
+
 from src.Configuration.Configuration import PATH_TO_LOCAL_REPORT
 from src.Report.ReporterInterface import ReporterInterface
 
@@ -26,5 +27,8 @@ class LocalReporter(ReporterInterface):
     def report(self, files_succeed: List[str], files_failed: List[str]):
         with open(PATH_TO_LOCAL_REPORT, "a+") as report:
             time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-            current_index = self.index + 1
-            report.write(f"{current_index} {time} | upload report: success: {files_succeed}, failed: {files_failed}")
+            self.index = self.index + 1
+            report.write(f"{self.index} {time} | upload report: success: {files_succeed}, failed: {files_failed}")
+
+
+LocalReporter.get_local_reporter_index()
