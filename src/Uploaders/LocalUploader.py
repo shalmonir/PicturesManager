@@ -9,14 +9,14 @@ class LocalUploader(UploaderInterface):
     upload_handler = PictureLocalFileHandler()
 
     def upload(self, files: List[FileStorage], album: str) -> tuple[List[str], Dict[str, Exception]]:
-        succeed = []
+        succeed = {}
         failed = {}
         if files is not None:
             for file in files:
                 try:
                     picture_content = file.stream.read()
-                    _, bytes_written = self.upload_handler.store(file.filename, picture_content)
-                    succeed.append(file.filename)
+                    store_path, bytes_written = self.upload_handler.store(file.filename, picture_content)
+                    succeed[file.filename] = store_path
                 except Exception as e:
                     failed[file.filename] = str(e)
         return succeed, failed

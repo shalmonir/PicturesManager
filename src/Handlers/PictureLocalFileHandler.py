@@ -16,9 +16,10 @@ class WriteLocalFileException(Exception):
 class PictureLocalFileHandler:
     def store(self, picture_file_name, picture_content):
         try:
-            with open(PATH_TO_LOCAL_STORAGE + SEPERATOR + picture_file_name, "wb") as pic:
+            destination_path = PATH_TO_LOCAL_STORAGE + SEPERATOR + picture_file_name
+            with open(destination_path, "wb") as pic:
                 payload_bytes = pic.write(picture_content)
-                return pic.name, payload_bytes
+                return destination_path, payload_bytes
         except Exception as exception:
             logging.error("Failed reading file, Error details: " + exception.__str__())
             raise WriteLocalFileException()

@@ -35,9 +35,9 @@ class LocalFileDB(DBInterface):
 
     def store_upload_request(self, upload_request: UploadRequest):
         with open(self.local_db_directory + UPLOAD_STR, "a+") as db:
-            db.write(json.dumps({"id": upload_request.id, "album_name": upload_request.album_name,
+            db.write(json.dumps({"id": upload_request.id, "album_id": upload_request.album_id,
                                                          "status": upload_request.status,
-                                                         "time_stamp": upload_request.created_date}) + "\n")
+                                                         "time_stamp": upload_request.time_stamp}) + "\n")
 
     def general_read(self, db_file: str):
         res = []
