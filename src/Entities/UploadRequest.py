@@ -11,7 +11,7 @@ class UploadRequest(BaseEntity):
     time_stamp = Column(String)
     album_id = Column(Integer, ForeignKey('albums.id'))
 
-    def __init__(self, album_id, status: str, time_stamp):
+    def __init__(self, album_id: int, status: str, time_stamp):
         self.album_id = album_id
         self.status = status
         self.time_stamp = time_stamp

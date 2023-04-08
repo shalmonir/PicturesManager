@@ -10,3 +10,17 @@ def create():
     db_session = scoped_session(sessionmaker())
     db_session.configure(bind=engine)
     BaseEntity.metadata.create_all(engine)
+
+
+def get_session():
+    engine = create_engine(DB_SECRET)
+    db_session = scoped_session(sessionmaker())
+    db_session.configure(bind=engine)
+    return db_session
+
+
+def get_engine():
+    return create_engine(DB_SECRET)
+
+
+create()
