@@ -56,7 +56,6 @@ def upload():
     if request.method == 'POST':
         request_internal = process_upload_request(request)
         files_uploaded, files_failed_upload = context.get_uploader().upload(request_internal['files'], request_internal['album_name'])
-        # context.get_reporter().report(files_uploaded, files_failed_upload)
         return render_template("upload_summary.html",
                                album=f"{request_internal['album_name']}",
                                successfully=f"{', '.join([str(file) + ': ' + str(upload_path)  for file, upload_path in files_uploaded.items()])}",
