@@ -27,25 +27,3 @@ class LocalDB(DBInterface):
         session = get_session()
         session.add(entity)
         session.commit()
-
-    def general_read(self, db_file: str):
-        res = []
-        with open(self.local_db_directory + db_file, "r") as db:
-            lines = db.readlines()
-            for line in lines:
-                res.append(line)
-        return res
-
-    def read_albums(self):
-        return self.general_read()
-
-    def read_pictures(self):
-        return self.general_read()
-
-    def read_users(self):
-        return self.general_read()
-
-    def read_uploads(self):
-        return self.general_read()
-
-
