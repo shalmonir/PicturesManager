@@ -2,7 +2,7 @@ import hashlib
 import logging
 import os
 
-from flask import Flask, request, render_template, Request
+from flask import Flask, request, render_template, Request, Blueprint
 from flask import send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 
@@ -12,26 +12,34 @@ from src.Context.LocalContextMgr import LocalContextMgr
 from src.Entities.UploadRequest import UploadRequest
 from src.Entities.User import User
 
-app = Flask(__name__, template_folder='template')
-app.config['SQLALCHEMY_DATABASE_URI'] = DB_SECRET
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-db = SQLAlchemy(app)
-with app.app_context():
-    db.create_all()
+db = SQLAlchemy()
+main_api = Blueprint("main_api", __name__, template_folder="templates", static_folder="static")
+
+
+def create_app():
+    app = Flask(__name__, template_folder='template')
+    app.config['SQLALCHEMY_DATABASE_URI'] = DB_SECRET
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+    db.init_app(app)
+    app.register_blueprint(main_api)
+    with app.app_context():
+        db.create_all()
+    return app
+
 
 profile = 'local'
 context = LocalContextMgr()
 
 
-@app.route('/')
-@app.route("/login", methods=['POST', 'GET'])
+@main_api.route('/')
+@main_api.route("/login", methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
         return render_template('home.html')
     return render_template("login.html")
 
 
-@app.route("/register", methods=['POST', 'GET'])
+@main_api.route("/register", methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
         register_request = process_register_request(request)
@@ -43,12 +51,12 @@ def register():
     return render_template("register.html")
 
 
-@app.route("/upload", methods=['POST', 'GET'])
+@main_api.route("/upload", methods=['POST', 'GET'])
 def upload():
     if request.method == 'POST':
         request_internal = process_upload_request(request)
         files_uploaded, files_failed_upload = context.get_uploader().upload(request_internal['files'], request_internal['album_name'])
-        context.get_reporter().report(files_uploaded, files_failed_upload)
+        # context.get_reporter().report(files_uploaded, files_failed_upload)
         return render_template("upload_summary.html",
                                album=f"{request_internal['album_name']}",
                                successfully=f"{', '.join([str(file) + ': ' + str(upload_path)  for file, upload_path in files_uploaded.items()])}",
@@ -56,7 +64,7 @@ def upload():
     return render_template('upload.html')
 
 
-@app.route("/show", methods=['POST', 'GET'])
+@main_api.route("/show", methods=['POST', 'GET'])
 def show():
     album_name = 'todo: put album name here (user select from list)'
     display_pictures = [pic for pic in
@@ -67,7 +75,7 @@ def show():
     return render_template("gallery.html", pictures=display_pictures, album_name=album_name)
 
 
-@app.route('/cdn/<path:filepath>')
+@main_api.route('/cdn/<path:filepath>')
 def download_file(filepath):
     directory, filename = os.path.split(filepath)
     return send_from_directory(directory, filename, as_attachment=False)
