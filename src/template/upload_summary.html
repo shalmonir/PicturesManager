@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload summary for album: {{ album }}</title>
+</head>
+<body>
+  <div class="header">
+    <h1 class="word">Report</h1>
+  </div></br></br></br>
+  <p>successfully uploaded: {{ successfully }}</p>
+  <p>failed uploaded: {{ failed }}</p>
+
+  <div align="left">
+          <div align="left" class="border">
+             <div class="header">
+                <h1 class="word">Back Home</h1>
+             </div>
+            <h2 class="word">
+                <form action="{{ url_for('dashboard.dashboard') }}" method="post">
+                    <input type="submit" class="btn" value="Home"></br>
+                </form>
+            </h2>
+          </div>
+        </div>
+</body>
+</html>
