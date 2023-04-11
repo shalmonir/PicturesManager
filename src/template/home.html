@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body></br>
+<h1>Home Page</h1>
+        <div align="left">
+        <a href="{{ url_for('dashboard.upload') }}" style="font-size: 40px; text-decoration: none">Upload</a></br>
+        <a href="{{ url_for('dashboard.show') }}" style="font-size: 40px; text-decoration: none">Show Pictures</a></br>
+        </div>
+
+        <div align="center">
+          <div align="center" class="border">
+             <div class="header">
+                <h1 class="word">Find Albums</h1>
+             </div></br></br></br>
+            <h2 class="word">
+                <form action="{{ url_for('dashboard.get_user_albums') }}" method="post">
+                  <div class="msg">{{ msg }}</div>
+                    <input id="username" name="username" type="text" placeholder="Enter Your Username" class="textbox"/></br>
+                    <input type="submit" class="btn" value="get albums"></br>
+                </form>
+            </h2>
+          </div>
+        </div>
+        <div align="center">
+          <div align="center" class="border">
+             <div class="header">
+                <h1 class="word">Log Out</h1>
+             </div>
+            <h2 class="word">
+                <form action="{{ url_for('auth.log_out') }}" method="post">
+                    <input type="submit" class="btn" value="log out"></br>
+                </form>
+            </h2>
+          </div>
+        </div>
+        {% for message in get_flashed_messages() %}
+        <h2>{{ message }}</h2>
+        {% endfor %}
+</body>
+</html>
