@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gallery</title>
+</head>
+<body>
+<h1>{{ user_name }}</h1>
+ <div class="cx" style="background-color:#fff;">
+    {% for album in albums %}
+     <a href="{{ url_for('dashboard.show_albums', album_id=album.id, album_name=album.name) }}" style="font-size: 40px; text-decoration: none">{{ album.name }}</a></br>
+    {% endfor %}
+  </div>
+</body>
+</html>

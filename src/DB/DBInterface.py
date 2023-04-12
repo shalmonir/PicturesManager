@@ -18,3 +18,15 @@ class DBInterface(ABC):
     @abstractmethod
     def store_upload_request(self, upload_request: UploadRequest):
         pass
+
+    @abstractmethod
+    def get_user_albums(self, user_id: int):
+        pass
+
+    @abstractmethod
+    def get_album(self, user_id: int):
+        pass
+
+    @abstractmethod
+    def get_album_pictures(self, album_id: int):
+        pass

@@ -26,7 +26,7 @@ context = LocalContextMgr()
 
 @main_api.route("/show2", methods=['POST', 'GET'])
 def show_pictures_in_album():
-    from src.Utils.DBUtil import DBUtil
+    from src.DB.DBUtil import DBUtil
     album_id = 2
     util = DBUtil()
     display_pictures = util.get_album_pictures(album_id=album_id)

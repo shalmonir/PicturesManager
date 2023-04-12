@@ -2,7 +2,6 @@ from flask import Blueprint, redirect, url_for, flash, render_template, request
 from flask_login import current_user, login_user, logout_user
 
 from src.Context.LocalContextMgr import LocalContextMgr
-from src.Utils.DBUtil import DBUtil
 from src.Utils.RequestProcessor import RequestProcessor
 
 auth = Blueprint('auth', import_name=__name__)
@@ -18,10 +17,7 @@ def login():
         return redirect(url_for('dashboard.dashboard'))
     if request.method == 'POST':
         login_request = RequestProcessor.process_login_request(request)
-        try:
-            user = DBUtil().get_user_by_name(login_request['username'])
-        except Exception:
-            return render_template("error.html", error_msg=f"failed authenticating")
+        user = context.get_db_utility().get_user_by_name(login_request['username'])
         if user is not None and user.password == (login_request['password']):
             if login_user(user, False):
                 flash('Logged.', 'info')
