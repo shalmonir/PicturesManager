@@ -1,6 +1,7 @@
 import os
 
-from flask import Blueprint, render_template, request
+import flask_login
+from flask import Blueprint, render_template, request, send_from_directory
 from flask_login import login_required
 
 from src.Configuration.Configuration import PATH_TO_LOCAL_STORAGE, LEGAL_PICTURE_SUFFIX
@@ -46,3 +47,18 @@ def show():
 @login_required
 def get_user_albums():
     return render_template("test.html", str_printable='user not found')
+
+
+@dash.route("/albums_menu", methods=['POST', 'GET'])
+@login_required
+def show_user_albums():
+    user = flask_login.current_user
+    user_albums = context.get_db_utility().get_user_albums(user_id=user.id)
+    return render_template("albums.html", user_name=user.name, albums=user_albums)
+
+
+@dash.route("/album/<album_id>/<album_name>", methods=['POST', 'GET'])
+@login_required
+def show_albums(album_id, album_name):
+    pictures = context.get_db_utility().get_album_pictures(album_id)
+    return render_template("gallery.html", album_name=album_name, pictures=pictures)
