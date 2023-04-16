@@ -33,6 +33,9 @@
                 </form>
             </h2>
           </div>
+            {% for message in get_flashed_messages() %}
+            <h2>{{ message }}</h2>
+            {% endfor %}
         </div>
     </body>
 </html>

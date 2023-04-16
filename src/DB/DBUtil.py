@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select, and_
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from src import DB_SECRET
@@ -26,10 +26,13 @@ class DBUtil(DBInterface):
         return self.db.execute(self.db.query(Album).filter_by(id=album_id)).scalar()
 
     def get_user_by_name(self, username: str):
-        return self.db.execute(self.db.query(User).filter_by(name=username)).scalar()
+        return self.db.query(User).filter_by(name=username).first()
 
     def get_user_albums(self, user_id: int):
-        return self.db.execute(self.db.query(Album).filter_by(owner_id=user_id)).scalars()
+        return self.db.query(Album).filter_by(owner_id=user_id).all()
+
+    def search_user_albums(self, user_id: int, keyword: str):
+        return self.db.query(Album).filter(Album.name.contains(keyword)).all()
 
     def get_album_pictures(self, album_id: int):
         return self.db.execute(self.db.query(Picture).filter_by(album_id=album_id)).scalars().all()

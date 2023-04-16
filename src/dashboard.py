@@ -45,8 +45,11 @@ def show():
 
 @dash.route("/user_albums", methods=['POST', 'GET'])
 @login_required
-def get_user_albums():
-    return render_template("test.html", str_printable='user not found')
+def search_user_albums():
+    search_request = RequestProcessor.process_search_request(request)
+    user = flask_login.current_user
+    user_albums = context.get_db_utility().search_user_albums(user_id=user.id, keyword=search_request['album_keyword'])
+    return render_template("albums.html", user_name=user.name, albums=user_albums)
 
 
 @dash.route("/albums_menu", methods=['POST', 'GET'])

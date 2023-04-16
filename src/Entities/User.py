@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 from flask_sqlalchemy.model import Model
-from sqlalchemy import Column, Integer, Text, Sequence, String
+from sqlalchemy import Column, Integer, String
 
 from src.Entities.BaseEntity import BaseEntity
 
