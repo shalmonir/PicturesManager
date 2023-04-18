@@ -8,7 +8,7 @@ from src.Uploaders.UploaderInterface import UploaderInterface
 class LocalUploader(UploaderInterface):
     upload_handler = PictureLocalFileHandler()
 
-    def upload(self, files: List[FileStorage], album: str) -> tuple[List[str], Dict[str, Exception]]:
+    def upload(self, files: List[FileStorage], album: str):
         succeed = {}
         failed = {}
         if files is not None:

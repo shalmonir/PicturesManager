@@ -11,7 +11,7 @@ PICTURE_STR = "picture"
 ALBUM_STR = "album"
 
 
-class LocalFileDB(DBInterface):
+class LocalFileDB(DBInterface):  #  TODO: Fix test cases -> remove this
     def __init__(self):
         self.local_db_directory = PATH_TO_LOCAL_DB_DIRECTORY
         self.init_indexes()
