@@ -34,13 +34,14 @@ def upload():
 @dash.route("/show", methods=['POST', 'GET'])
 @login_required
 def show():
-    album_name = 'todo: put album name here (user select from list)'
-    display_pictures = [pic for pic in
-                        [PATH_TO_LOCAL_STORAGE + '\\' + pic for pic in
-                         tuple(
-                             filter(lambda f: os.path.isfile(PATH_TO_LOCAL_STORAGE + '\\' + f), os.listdir(PATH_TO_LOCAL_STORAGE)))]
-                        if pic.endswith(tuple(LEGAL_PICTURE_SUFFIX))]
-    return render_template("gallery.html", pictures=display_pictures, album_name=album_name)
+    return render_template("error.html", error_msg='temporary unavailable')
+    # album_name = 'todo: put album name here (user select from list)'
+    # display_pictures = [pic for pic in
+    #                     [PATH_TO_LOCAL_STORAGE + '\\' + pic for pic in
+    #                      tuple(
+    #                          filter(lambda f: os.path.isfile(PATH_TO_LOCAL_STORAGE + '\\' + f), os.listdir(PATH_TO_LOCAL_STORAGE)))]
+    #                     if pic.endswith(tuple(LEGAL_PICTURE_SUFFIX))]
+    # return render_template("gallery.html", pictures=display_pictures, album_name=album_name)
 
 
 @dash.route("/user_albums", methods=['POST', 'GET'])

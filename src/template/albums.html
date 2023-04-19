@@ -11,6 +11,11 @@
     {% for album in albums %}
      <a href="{{ url_for('dashboard.show_albums', album_id=album.id, album_name=album.name) }}" style="font-size: 40px; text-decoration: none">{{ album.name }}</a></br>
     {% endfor %}
+
+     <br>
+     <form action="{{ url_for('dashboard.dashboard') }}" method="post">
+        <input type="submit" class="btn" value="Home"></br>
+     </form>
   </div>
 </body>
 </html>
