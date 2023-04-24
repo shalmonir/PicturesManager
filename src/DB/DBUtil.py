@@ -1,50 +1,41 @@
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine, select, and_
-from sqlalchemy.orm import scoped_session, sessionmaker
+from typing import List
 
-from src import DB_SECRET
+from flask_sqlalchemy import SQLAlchemy
+
 from src.DB.DBInterface import DBInterface
-from src.Entities import UploadRequest
 from src.Entities.Album import Album
 from src.Entities.Picture import Picture
 from src.Entities.User import User
 
 
 class DBUtil(DBInterface):
-    db: SQLAlchemy
-
-    def __init__(self):
-        engine = create_engine(DB_SECRET)
-        db_session = scoped_session(sessionmaker())
-        db_session.configure(bind=engine)
-        self.db = db_session
+    def get_db(self) -> SQLAlchemy:
+        from src import DBConnectionMgr
+        return DBConnectionMgr().get_connection()
 
     def get_user(self, user_id: int):
-        return self.db.execute(self.db.query(User).filter_by(id=user_id)).scalar()
+        return self.get_db().session.query(User).filter_by(id=user_id).scalar()
 
     def get_album(self, album_id: int):
-        return self.db.execute(self.db.query(Album).filter_by(id=album_id)).scalar()
+        return self.get_db().session.query(Album).filter_by(id=album_id).scalar()
 
     def get_user_by_name(self, username: str):
-        return self.db.query(User).filter_by(name=username).first()
+        return self.get_db().session.query(User).filter(User.name==username).first()
 
     def get_user_albums(self, user_id: int):
-        return self.db.query(Album).filter_by(owner_id=user_id).all()
+        return self.get_db().session.query(Album).filter(Album.owner_id==user_id).all()
 
-    def search_user_albums(self, user_id: int, keyword: str):
-        return self.db.query(Album).filter(Album.name.contains(keyword)).all()
+    def search_user_albums(self, user_id: int, keyword: str) -> List[Album]:
+        res = []
+        for album in self.get_user_albums(user_id=user_id):
+            if keyword in album.name:
+                res.append(album)
+        return res
 
     def get_album_pictures(self, album_id: int):
-        return self.db.execute(self.db.query(Picture).filter_by(album_id=album_id)).scalars().all()
+        return self.get_db().session.query(Picture).filter(Picture.album_id == album_id).all()
 
-    def store_picture(self, picture: Picture):
-        pass
-
-    def store_user(self, user: User):
-        pass
-
-    def store_upload_request(self, upload_request: UploadRequest):
-        pass
-
-    def store_album(self, album: Album):
-        pass
+    def store(self, entity):
+        self.get_db().session.add(entity)
+        self.get_db().session.commit()
+        return entity
