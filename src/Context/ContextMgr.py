@@ -12,6 +12,7 @@ from src.Entities.Picture import Picture
 from src.Entities.UploadRequest import UploadRequest
 from src.Entities.User import User
 from src.Report.ReporterInterface import ReporterInterface
+from src.Uploaders.UploaderInterface import UploaderInterface
 
 
 class Context:
@@ -19,8 +20,12 @@ class Context:
     reporter: ReporterInterface
 
     def __init__(self):
+        self.uploader = None
         self.db_utility = None
         self.reporter = None
+
+    def get_uploader(self) -> UploaderInterface:
+        return self.uploader
 
     def get_db_utility(self) -> DBInterface:
         return self.db_utility
@@ -54,8 +59,10 @@ class Context:
                     upload_request.status = 'FAIL'
                     upload_request.content = f"Error details: {str(upload_exception)}"
                     DBUtil().store(upload_request)
+                    return files_upload_success, files_upload_fail
         except Exception as e:
             current_app.logger.error(str(e))
+            return files_upload_success, files_upload_fail
 
     def upload_pictures(self, album, files):
         files_upload_success = {}
