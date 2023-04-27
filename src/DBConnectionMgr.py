@@ -4,7 +4,6 @@ class DBConnectionMgr(object):
         or else returns the previous singleton object"""
         if not hasattr(cls, 'instance'):
             cls.instance = super(DBConnectionMgr, cls).__new__(cls)
-        cls.connection = 'nir'
         return cls.instance
 
     def set_connection(self, connection):

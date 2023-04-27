@@ -1,14 +1,13 @@
 from sqlalchemy import Column, Integer, ForeignKey, String
 
-from src.Entities.BaseEntity import BaseEntity
 from . import Album
-
+from src.external import db
 UPLOADS_TABLE_NAME = 'uploads'
 
 
-class UploadRequest(BaseEntity):
+class UploadRequest(db.Model):
     __tablename__ = UPLOADS_TABLE_NAME
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     status = Column(String)
     time_stamp = Column(String)
     album_id = Column(Integer, ForeignKey('albums.id'))
