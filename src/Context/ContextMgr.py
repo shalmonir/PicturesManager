@@ -6,7 +6,6 @@ from flask import current_app
 from werkzeug.datastructures import FileStorage
 
 from src.DB.DBInterface import DBInterface
-from src.DB.DBUtil import DBUtil
 from src.Entities.Album import Album
 from src.Entities.Picture import Picture
 from src.Entities.UploadRequest import UploadRequest
@@ -35,22 +34,24 @@ class Context:
 
     def upload(self, files: List[FileStorage], album_name: str, user: User):
         upload_request = None
+        files_upload_success = {}
+        files_upload_fail = {}
         try:
             try:
                 status = 'Init'
                 current_app.logger.debug(f"album: {album_name}, files amount: {len(files)}")
-                album_query = DBUtil().search_user_albums(user_id=user.id, keyword=album_name)
+                album_query = self.get_db_utility().search_user_albums(user_id=user.id, keyword=album_name)
                 if len(album_query) == 0:
-                    album = DBUtil().store(Album(name=album_name, owner_id=user.id))
+                    album = self.get_db_utility().store(Album(name=album_name, owner_id=user.id))
                 else:
                     album = album_query[0]
-                upload_request = DBUtil().store(UploadRequest(status=status, time_stamp=f"{datetime.now()}", album_id=album.id, content=f"album: {album.name}"))
+                upload_request = self.get_db_utility().store(UploadRequest(status=status, time_stamp=f"{datetime.now()}", album_id=album.id, content=f"album: {album.name}"))
 
                 files_upload_success, files_upload_fail = self.upload_pictures(album, files)
 
                 upload_request.status = 'Pictures Upload Action Done'
                 upload_request.content = f"#success: {len(files_upload_success)}, #failed: {len(files_upload_fail)}"
-                DBUtil().store(upload_request)
+                self.get_db_utility().store(upload_request)
                 return files_upload_success, files_upload_fail
 
             except Exception as upload_exception:
@@ -58,7 +59,7 @@ class Context:
                 if upload_request is not None:
                     upload_request.status = 'FAIL'
                     upload_request.content = f"Error details: {str(upload_exception)}"
-                    DBUtil().store(upload_request)
+                    self.get_db_utility().store(upload_request)
                     return files_upload_success, files_upload_fail
         except Exception as e:
             current_app.logger.error(str(e))

@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 
 from flask_sqlalchemy import SQLAlchemy
@@ -20,10 +21,10 @@ class DBUtil(DBInterface):
         return self.get_db().session.query(Album).filter_by(id=album_id).scalar()
 
     def get_user_by_name(self, username: str):
-        return self.get_db().session.query(User).filter(User.name==username).first()
+        return self.get_db().session.query(User).filter(User.name == username).first()
 
     def get_user_albums(self, user_id: int):
-        return self.get_db().session.query(Album).filter(Album.owner_id==user_id).all()
+        return self.get_db().session.query(Album).filter(Album.owner_id == user_id).all()
 
     def search_user_albums(self, user_id: int, keyword: str) -> List[Album]:
         res = []
