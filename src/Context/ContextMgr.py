@@ -36,19 +36,15 @@ class Context:
         upload_request = None
         files_upload_success = {}
         files_upload_fail = {}
+        status = 'Init'
         try:
             try:
-                status = 'Init'
                 current_app.logger.debug(f"album: {album_name}, files amount: {len(files)}")
-                album_query = self.get_db_utility().search_user_albums(user_id=user.id, keyword=album_name)
-                if len(album_query) == 0:
-                    album = self.get_db_utility().store(Album(name=album_name, owner_id=user.id))
-                else:
-                    album = album_query[0]
+                album = self.get_db_utility().get_else_create_album(album_name=album_name, user_id=user.id)
+                status = 'Album entity present'
                 upload_request = self.get_db_utility().store(UploadRequest(status=status, time_stamp=f"{datetime.now()}", album_id=album.id, content=f"album: {album.name}"))
 
                 files_upload_success, files_upload_fail = self.upload_pictures(album, files)
-
                 upload_request.status = 'Pictures Upload Action Done'
                 upload_request.content = f"#success: {len(files_upload_success)}, #failed: {len(files_upload_fail)}"
                 self.get_db_utility().store(upload_request)
@@ -57,7 +53,7 @@ class Context:
             except Exception as upload_exception:
                 current_app.logger.error(str(upload_exception))
                 if upload_request is not None:
-                    upload_request.status = 'FAIL'
+                    upload_request.status = status
                     upload_request.content = f"Error details: {str(upload_exception)}"
                     self.get_db_utility().store(upload_request)
                     return files_upload_success, files_upload_fail

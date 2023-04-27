@@ -1,4 +1,3 @@
-import uuid
 from typing import List
 
 from flask_sqlalchemy import SQLAlchemy
@@ -40,3 +39,10 @@ class DBUtil(DBInterface):
         self.get_db().session.add(entity)
         self.get_db().session.commit()
         return entity
+
+    def get_else_create_album(self, album_name: str, user_id: int):
+        album_query = self.search_user_albums(user_id=user_id, keyword=album_name)
+        if len(album_query) == 0:
+            return self.store(Album(name=album_name, owner_id=user_id))
+        else:
+            return album_query[0]

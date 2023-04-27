@@ -4,7 +4,7 @@ from flask import Flask
 
 from src.Configuration.Config import Config
 from src.Configuration.Local import DB_SECRET
-from src.DBConnectionMgr import DBConnectionMgr
+from src.DB.DBConnectionMgr import DBConnectionMgr
 from src.authentication import auth
 from src.dashboard import dash
 from src.download import download
