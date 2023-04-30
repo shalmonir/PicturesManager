@@ -10,6 +10,8 @@ from src.dashboard import dash
 from src.download import download
 from src.external import login_manager, db
 from flask_bootstrap import Bootstrap
+from sqlalchemy import create_engine
+from sqlalchemy_utils import database_exists, create_database
 
 
 def create_app():
@@ -45,6 +47,10 @@ def define_externals(app):
 
 
 def define_db(app):
+    engine = create_engine(DB_SECRET)
+    if not database_exists(engine.url):
+        create_database(engine.url)
+
     app.config['SQLALCHEMY_DATABASE_URI'] = DB_SECRET
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     db.init_app(app)
