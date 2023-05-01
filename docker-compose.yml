@@ -1,0 +1,40 @@
+version: '1'
+
+services:
+  postgres:
+    container_name: PicturesMgrDB
+    restart: always
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=usr
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=db
+    volumes:
+      - db-data:/var/lib/postgresql
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+
+  app:
+    container_name: PicturesMgr
+    restart: always
+    build: .
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/app
+      - pictures:/pictures
+    depends_on:
+      - postgres
+    environment:
+      - VIRTUAL_HOST=auth.test.org
+      - VIRTUAL_PORT=5000
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_PORT_5432_TCP_ADDR=postgresql
+      - POSTGRES_PORT_5432_TCP_PORT=5432
+    entrypoint: [ "python", "app.py"]
+
+volumes:
+  db-data: {}
+  pictures: {}

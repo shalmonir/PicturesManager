@@ -1,15 +1,14 @@
 from sqlalchemy import Column, Integer, ForeignKey, String
 
-from src.Entities.BaseEntity import BaseEntity
 from . import Album
 from . import UploadRequest
-
+from src.external import db
 PICTURES_TABLE_NAME = 'pictures'
 
 
-class Picture(BaseEntity):
+class Picture(db.Model):
     __tablename__ = PICTURES_TABLE_NAME
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     album_id = Column(Integer, ForeignKey('albums.id'))
     file_name = Column(String)
     picture_hash = Column(String)

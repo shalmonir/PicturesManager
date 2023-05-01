@@ -10,14 +10,13 @@
 
     <h1>Home Page</h1>
 
-    <a href="{{ url_for('dashboard.upload') }}" style="font-size: 40px; text-decoration: none">Upload</a></br>
-    <a href="{{ url_for('dashboard.show') }}" style="font-size: 40px; text-decoration: none">Show Pictures</a></br>
-    <a href="{{ url_for('dashboard.show_user_albums') }}" style="font-size: 40px; text-decoration: none">Show My Albums</a>
+    <a href="{{ url_for('dashboard.upload') }}" style="font-size: 30px; text-decoration: none">Upload</a></br>
+    <a href="{{ url_for('dashboard.show_user_albums') }}" style="font-size: 30px; text-decoration: none">Show My Albums</a>
 
     </br></br></br>
 
     <div class="header">
-        <h1 class="word">Find Albums</h1>
+        <h2 class="word">Find Albums (case-sensitive)</h2>
     </div>
     <h2 class="word">
         <form action="{{ url_for('dashboard.search_user_albums') }}" method="post">
@@ -29,7 +28,7 @@
     </br>
 
     <div class="header">
-        <h1 class="word">Log Out</h1>
+        <h2 class="word">Log Out</h2>
     </div>
     <h2 class="word">
         <form action="{{ url_for('auth.log_out') }}" method="post">

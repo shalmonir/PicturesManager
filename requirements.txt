@@ -1,0 +1,9 @@
+psycopg2-binary==2.7.4
+
+SQLAlchemy==2.0.4
+Flask==2.2.3
+Flask-SQLAlchemy==3.0.3
+Flask-Login==0.6.2
+psycopg2==2.9.6
+flask-bootstrap
+sqlalchemy_utils
