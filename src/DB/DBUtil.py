@@ -32,6 +32,9 @@ class DBUtil(DBInterface):
                 res.append(album)
         return res
 
+    def match_user_albums(self, user_id: int, match_name: str) -> List[Album]:
+        return self.get_db().session.query(Album).filter(Album.owner_id == user_id).filter(Album.name == match_name).all()
+
     def get_album_pictures(self, album_id: int):
         return self.get_db().session.query(Picture).filter(Picture.album_id == album_id).all()
 
@@ -41,7 +44,7 @@ class DBUtil(DBInterface):
         return entity
 
     def get_else_create_album(self, album_name: str, user_id: int):
-        album_query = self.search_user_albums(user_id=user_id, keyword=album_name)
+        album_query = self.match_user_albums(user_id=user_id, match_name=album_name)
         if len(album_query) == 0:
             return self.store(Album(name=album_name, owner_id=user_id))
         else:
