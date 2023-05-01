@@ -32,7 +32,7 @@ class Context:
     def get_reporter(self) -> ReporterInterface:
         return self.reporter
 
-    def upload(self, files: List[FileStorage], album_name: str, user: User):
+    def upload(self, files: List[FileStorage], album_name: str, user_id: int):
         upload_request = None
         files_upload_success = {}
         files_upload_fail = {}
@@ -40,11 +40,11 @@ class Context:
         try:
             try:
                 current_app.logger.debug(f"album: {album_name}, files amount: {len(files)}")
-                album = self.get_db_utility().get_else_create_album(album_name=album_name, user_id=user.id)
+                album = self.get_db_utility().get_else_create_album(album_name=album_name, user_id=user_id)
                 status = 'Album entity present'
                 upload_request = self.get_db_utility().store(UploadRequest(status=status, time_stamp=f"{datetime.now()}", album_id=album.id, content=f"album: {album.name}"))
 
-                files_upload_success, files_upload_fail = self.upload_pictures(album, files)
+                files_upload_success, files_upload_fail = self.upload_pictures(album.id, files)
                 upload_request.status = 'Pictures Upload Action Done'
                 upload_request.content = f"#success: {len(files_upload_success)}, #failed: {len(files_upload_fail)}"
                 self.get_db_utility().store(upload_request)
@@ -61,7 +61,7 @@ class Context:
             current_app.logger.error(str(e))
             return files_upload_success, files_upload_fail
 
-    def upload_pictures(self, album, files):
+    def upload_pictures(self, album_id: int, files):
         files_upload_success = {}
         files_upload_fail = {}
         for pic in files:
@@ -72,7 +72,7 @@ class Context:
                 file_name = file_result[0]
                 file_path = file_result[1]
                 self.db_utility.store(
-                    Picture(album.id, file_name, hashlib.sha1(file_name.encode()).hexdigest(), file_path, 1))
+                    Picture(album_id, file_name, hashlib.sha1(file_name.encode()).hexdigest(), file_path, 1))
             else:
                 files_upload_fail.update(fail)
         current_app.logger.debug(f"failed: {str(files_upload_fail)}, success: {str(files_upload_success)}")

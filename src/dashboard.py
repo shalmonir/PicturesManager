@@ -21,7 +21,7 @@ def dashboard():
 def upload():
     if request.method == 'POST':
         request_internal = RequestProcessor.process_upload_request(request)
-        files_uploaded, files_failed_upload = context.upload(request_internal['files'], request_internal['album_name'], flask_login.current_user)
+        files_uploaded, files_failed_upload = context.upload(request_internal['files'], request_internal['album_name'], flask_login.current_user.id)
         return render_template("upload_summary.html",
                                album=f"{request_internal['album_name']}",
                                successfully=f"{', '.join([str(file) + ': ' + str(upload_path)  for file, upload_path in files_uploaded.items()])}",

@@ -1,6 +1,6 @@
 import os
 
-from flask import Blueprint, send_from_directory, current_app, send_file
+from flask import Blueprint, send_from_directory, current_app
 from flask_login import login_required
 
 
