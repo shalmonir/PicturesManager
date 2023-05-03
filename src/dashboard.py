@@ -1,7 +1,8 @@
 import os
 
+import flask
 import flask_login
-from flask import Blueprint, render_template, request, send_from_directory
+from flask import Blueprint, render_template, request, session
 from flask_login import login_required
 from src.Context.LocalContextMgr import LocalContextMgr
 from src.Utils.RequestProcessor import RequestProcessor
@@ -48,6 +49,42 @@ def show_user_albums():
 
 @dash.route("/album/<album_id>/<album_name>", methods=['POST', 'GET'])
 @login_required
-def show_albums(album_id, album_name):
-    pictures = context.get_db_utility().get_album_pictures(album_id)
-    return render_template("gallery.html", album_name=album_name, pictures=pictures)
+def show_album(album_id, album_name):
+    user_id = flask_login.current_user.id
+    current_user_session = flask.session.get(user_id, default={})
+    # if album_id not in current_session.keys():
+    # TODO: create state obj instead of manage state in controller
+    # TODO: save ONLY page
+    # current_user_session[album_id] = [pictures[i:i + PICTURES_IN_PAGE] for i in range(0, len(pictures), PICTURES_IN_PAGE)]
+    current_user_session[album_id] = 0
+    # session[user_id] = current_session
+    flask.session[user_id] = current_user_session
+    # session.update(user_id, current_session)
+    return render_template("gallery.html", album_name=album_name,
+                           pictures=context.get_db_utility().get_album_pictures_page(album_id, 0), album_id=album_id)
+
+
+@dash.route("/next_page/<album_id>/<album_name>", methods=['POST', 'GET'])
+@login_required
+def next_page(album_id, album_name):
+    current_session = flask.session.get(flask_login.current_user.id, default={})
+    page = current_session.get(album_id + 'page') + 1
+    if page == len(current_session[album_id]):
+        page = 0
+    current_session[album_id + 'page'] = page
+    session[flask_login.current_user.id] = current_session
+    return render_template("gallery.html", album_name=album_name,
+                           pictures=context.get_db_utility().get_album_pictures_page(album_id, page), album_id=album_id)
+
+
+@dash.route("/previous_page/<album_id>/<album_name>", methods=['POST', 'GET'])
+@login_required
+def previous_page(album_id, album_name):
+    current_session = flask.session.get(flask_login.current_user.id, default={})
+    page = current_session.get(album_id + 'page') - 1
+    if page == 0:
+        page = len(current_session[album_id]) - 1
+    current_session[album_id + 'page'] = page
+    session[flask_login.current_user.id] = current_session
+    return render_template("gallery.html", album_name=album_name,
+                           pictures=context.get_db_utility().get_album_pictures_page(album_id, page), album_id=album_id)

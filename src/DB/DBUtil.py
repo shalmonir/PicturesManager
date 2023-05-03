@@ -2,6 +2,7 @@ from typing import List
 
 from flask_sqlalchemy import SQLAlchemy
 
+from src.Configuration.Configuration import PICTURES_IN_PAGE
 from src.DB.DBInterface import DBInterface
 from src.Entities.Album import Album
 from src.Entities.Picture import Picture
@@ -49,3 +50,10 @@ class DBUtil(DBInterface):
             return self.store(Album(name=album_name, owner_id=user_id))
         else:
             return album_query[0]
+
+    def get_album_pictures_page(self, album_id: int, page: int):
+        pictures = self.get_album_pictures(album_id=album_id)
+        divided = [pictures[i:i + PICTURES_IN_PAGE] for i in range(0, len(pictures), PICTURES_IN_PAGE)]
+        if page >= len(divided):
+            page = 0
+        return divided[page]
