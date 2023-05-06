@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, flash, render_template, request
+from flask import Blueprint, redirect, url_for, flash, render_template, request, session
 from flask_login import current_user, login_user, logout_user
 
 from src.Context.LocalContextMgr import LocalContextMgr
@@ -21,6 +21,8 @@ def login():
         if user is not None and user.password == (login_request['password']):
             if login_user(user, False):
                 flash('Logged.', 'info')
+                session.permanent = True
+                session[f"{user.id}"] = {}
                 return redirect(url_for('dashboard.dashboard'))
             else:
                 flash('Your account is blocked.', 'warning')

@@ -9,7 +9,7 @@
  <div class="cx" style="background-color:#fff;" align="center">
      <h1>{{ user_name }}</h1>
     {% for album in albums %}
-     <a href="{{ url_for('dashboard.show_albums', album_id=album.id, album_name=album.name) }}" style="font-size: 40px; text-decoration: none">{{ album.name }}</a></br>
+     <a href="{{ url_for('dashboard.show_album', album_id=album.id, album_name=album.name) }}" style="font-size: 40px; text-decoration: none">{{ album.name }}</a></br>
     {% endfor %}
 
      <br>

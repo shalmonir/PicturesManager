@@ -1,9 +1,9 @@
 import os
+from datetime import timedelta
 
 from flask import Flask
-
 from src.Configuration.Config import Config
-from src.Configuration.Local import DB_SECRET
+from src.Configuration.Configuration import DB_SECRET
 from src.DB.DBConnectionMgr import DBConnectionMgr
 from src.authentication import auth
 from src.dashboard import dash
@@ -21,6 +21,7 @@ def create_app():
     app.config.from_object(Config())
     define_blueprints(app)
     define_externals(app)
+    define_sessions(app)
     try:
         define_db(app)
     except Exception as e:
@@ -54,9 +55,14 @@ def define_db(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = DB_SECRET
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     db.init_app(app)
+
     with app.app_context():
         db.create_all()
     app.db = db
     DBConnectionMgr().set_connection(db)
     DBConnectionMgr().set_session(db.session)
 
+
+def define_sessions(app):
+    app.config['SESSION_TYPE'] = 'filesystem'
+    app.permanent_session_lifetime = timedelta(days=2)
