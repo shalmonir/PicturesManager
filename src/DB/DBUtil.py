@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from flask_sqlalchemy import SQLAlchemy
@@ -55,6 +56,7 @@ class DBUtil(DBInterface):
         pictures = self.get_album_pictures(album_id=album_id)
         divided = [pictures[i:i + PICTURES_IN_PAGE] for i in range(0, len(pictures), PICTURES_IN_PAGE)]
         if page >= len(divided):
+            logging.ERROR(f"required page is out of bounds for given album. album id: {album_id}, page: {page}")
             page = 0
         return divided[page]
 
