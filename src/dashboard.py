@@ -50,8 +50,7 @@ def show_album(album_id, album_name):
     user_id = flask_login.current_user.id
     current_user_session = session[f"{user_id}"]
     current_user_session[album_id] = 0
-    return render_template("gallery.html", album_name=album_name,
-                           pictures=context.get_db_utility().get_album_pictures_page(album_id, 0), album_id=album_id)
+    return render_gallery(album_id=album_id, album_name=album_name, page=0)
 
 
 @dash.route("/next_page/<album_id>/<album_name>", methods=['POST', 'GET'])
@@ -62,8 +61,7 @@ def next_page(album_id, album_name):
     if page == context.get_db_utility().get_album_pictures_pages_amount(album_id=album_id):
         page = 0
     current_session[album_id] = page
-    return render_template("gallery.html", album_name=album_name,
-                           pictures=context.get_db_utility().get_album_pictures_page(album_id, page), album_id=album_id)
+    return render_gallery(album_id=album_id, album_name=album_name, page=page)
 
 
 @dash.route("/previous_page/<album_id>/<album_name>", methods=['POST', 'GET'])
@@ -74,5 +72,9 @@ def previous_page(album_id, album_name):
     if page < 0:
         page = context.get_db_utility().get_album_pictures_pages_amount(album_id=album_id) - 1
     current_session[album_id] = page
+    return render_gallery(album_id=album_id, album_name=album_name, page=page)
+
+
+def render_gallery(album_id, album_name, page):
     return render_template("gallery.html", album_name=album_name,
                            pictures=context.get_db_utility().get_album_pictures_page(album_id, page), album_id=album_id)
