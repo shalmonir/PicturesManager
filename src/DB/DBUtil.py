@@ -57,3 +57,7 @@ class DBUtil(DBInterface):
         if page >= len(divided):
             page = 0
         return divided[page]
+
+    def get_album_pictures_pages_amount(self, album_id: int):
+        pictures_amount = len(self.get_album_pictures(album_id=album_id))
+        return int(pictures_amount / PICTURES_IN_PAGE) + (pictures_amount % PICTURES_IN_PAGE > 0)

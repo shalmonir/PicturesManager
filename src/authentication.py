@@ -21,7 +21,8 @@ def login():
         if user is not None and user.password == (login_request['password']):
             if login_user(user, False):
                 flash('Logged.', 'info')
-                session[user.id] = {'logged': True}
+                session.permanent = True
+                session[f"{user.id}"] = {}
                 return redirect(url_for('dashboard.dashboard'))
             else:
                 flash('Your account is blocked.', 'warning')
