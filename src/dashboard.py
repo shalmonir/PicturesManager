@@ -1,11 +1,11 @@
 import flask_login
 from flask import Blueprint, render_template, request, session
 from flask_login import login_required
-from src.Context.LocalContextMgr import LocalContextMgr
-from src.Utils.RequestProcessor import RequestProcessor
+from src.Context.LocalContext import LocalContext
+from src.Utils.RequestProcessor import RequestProcessor, REQUEST_UPLOAD_NAME, REQUEST_UPLOAD_FILES
 
 dash = Blueprint('dashboard', import_name=__name__)
-context = LocalContextMgr()
+context = LocalContext()
 
 
 @dash.route('/dashboard', methods=['GET', 'POST'])
@@ -19,9 +19,10 @@ def dashboard():
 def upload():
     if request.method == 'POST':
         request_internal = RequestProcessor.process_upload_request(request)
-        files_uploaded, files_failed_upload = context.upload(request_internal['files'], request_internal['album_name'], flask_login.current_user.id)
+        files_uploaded, files_failed_upload = \
+            context.upload(request_internal[REQUEST_UPLOAD_FILES], request_internal[REQUEST_UPLOAD_NAME], flask_login.current_user.id)
         return render_template("upload_summary.html",
-                               album=f"{request_internal['album_name']}",
+                               upload_name=f"{request_internal[REQUEST_UPLOAD_NAME]}",
                                successfully=f"{', '.join([str(file) + ': ' + str(upload_path)  for file, upload_path in files_uploaded.items()])}",
                                failed=f"{', '.join([str(file) + '(' + reason + '), ' for file, reason in files_failed_upload.items()])}")
     return render_template('upload.html')

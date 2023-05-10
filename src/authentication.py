@@ -1,13 +1,13 @@
 from flask import Blueprint, redirect, url_for, flash, render_template, request, session
 from flask_login import current_user, login_user, logout_user
 
-from src.Context.LocalContextMgr import LocalContextMgr
-from src.Utils.RequestProcessor import RequestProcessor
+from src.Context.LocalContext import LocalContext
+from src.Utils.RequestProcessor import RequestProcessor, REQUEST_USER_NAME, REQUEST_USER_PHRASE
 
 auth = Blueprint('auth', import_name=__name__)
 
 profile = 'local'
-context = LocalContextMgr()
+context = LocalContext()
 
 
 @auth.route('/')
@@ -17,8 +17,8 @@ def login():
         return redirect(url_for('dashboard.dashboard'))
     if request.method == 'POST':
         login_request = RequestProcessor.process_login_request(request)
-        user = context.get_db_utility().get_user_by_name(login_request['username'])
-        if user is not None and user.password == (login_request['password']):
+        user = context.get_db_utility().get_user_by_name(login_request[REQUEST_USER_NAME])
+        if user is not None and user.password == (login_request[REQUEST_USER_PHRASE]):
             if login_user(user, False):
                 flash('Logged.', 'info')
                 session.permanent = True

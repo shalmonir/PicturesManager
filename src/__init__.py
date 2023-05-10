@@ -6,6 +6,7 @@ from src.Configuration.Config import Config
 from src.Configuration.Configuration import DB_SECRET
 from src.DB.DBConnectionMgr import DBConnectionMgr
 from src.authentication import auth
+from src.aws_serve import aws
 from src.dashboard import dash
 from src.download import download
 from src.external import login_manager, db
@@ -40,6 +41,7 @@ def define_blueprints(app):
     app.register_blueprint(auth)
     app.register_blueprint(dash)
     app.register_blueprint(download)
+    app.register_blueprint(aws)
 
 
 def define_externals(app):
