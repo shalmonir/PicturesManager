@@ -7,6 +7,7 @@ from werkzeug.datastructures import FileStorage
 
 from src.DB.DBInterface import DBInterface
 from src.Entities.Album import Album
+from src.Entities.File import File
 from src.Entities.Picture import Picture
 from src.Entities.UploadRequest import UploadRequest
 from src.Entities.User import User
@@ -61,19 +62,36 @@ class Context:
             current_app.logger.error(str(e))
             return files_upload_success, files_upload_fail
 
-    def upload_pictures(self, album_id: int, files):
+    def upload_pictures(self, album_id: int, files, store_path=None):
         files_upload_success = {}
         files_upload_fail = {}
         for pic in files:
-            result, success, fail = self.uploader.upload_single_picture(file=pic)
+            result, success, fail = self.get_uploader().upload_single_picture(file=pic, store_path=store_path)
             if result:
                 files_upload_success.update(success)
                 file_result = next(iter((success.items())))
-                file_name = file_result[0]
-                file_path = file_result[1]
+                file_name, file_path = file_result[0], file_result[1]
                 self.db_utility.store(
-                    Picture(album_id, file_name, hashlib.sha1(file_name.encode()).hexdigest(), file_path, 1))
+                    Picture(album_id, file_name, hashlib.sha1(file_name.encode()).hexdigest(), file_path))
             else:
                 files_upload_fail.update(fail)
         current_app.logger.debug(f"failed: {str(files_upload_fail)}, success: {str(files_upload_success)}")
         return files_upload_success, files_upload_fail
+
+    def upload_files(self, files, store_path: str, user_id: int):
+        files_upload_success = {}
+        files_upload_fail = {}
+        for file in files:
+            result, success, fail = self.get_uploader().upload_single_file(file=file, store_path=store_path)
+            if result:
+                files_upload_success.update(success)
+                file_result = next(iter((success.items())))
+                file_name, file_path = file_result[0], file_result[1]
+                self.db_utility.store(File(user_id, file_name, hashlib.sha1(file_name.encode()).hexdigest(), file_path))
+            else:
+                files_upload_fail.update(fail)
+        current_app.logger.debug(f"failed: {str(files_upload_fail)}, success: {str(files_upload_success)}")
+        return files_upload_success, files_upload_fail
+
+    def get_files_names(self, user_id: int):
+        return self.get_uploader().get_files_names(user_id)

@@ -7,7 +7,7 @@ from src.Uploaders.UploaderInterface import UploaderInterface
 class LocalUploader(UploaderInterface):
     upload_handler = PictureLocalFileHandler()
 
-    def upload_single_picture(self, file: FileStorage):
+    def upload_single_picture(self, file: FileStorage, store_path=None):
         if file is not None:
             try:
                 picture_content = file.stream.read()
@@ -16,3 +16,6 @@ class LocalUploader(UploaderInterface):
             except Exception as e:
                 return False, {}, {file.filename: str(e)}
         return False, {}, {'': 'File is None - Invalid input'}
+
+    def get_files_names(self, prefix):
+        return self.upload_handler.get_all_files(prefix=prefix)
