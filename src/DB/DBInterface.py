@@ -27,5 +27,5 @@ class DBInterface(ABC):
         pass
 
     @abstractmethod
-    def get_else_create_album(self, album_name: str, user_id: int):
+    def fetch_album(self, album_name: str, user_id: int):
         pass

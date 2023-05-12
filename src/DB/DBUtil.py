@@ -45,7 +45,7 @@ class DBUtil(DBInterface):
         self.get_db().session.commit()
         return entity
 
-    def get_else_create_album(self, album_name: str, user_id: int):
+    def fetch_album(self, album_name: str, user_id: int):
         album_query = self.match_user_albums(user_id=user_id, match_name=album_name)
         if len(album_query) == 0:
             return self.store(Album(name=album_name, owner_id=user_id))
@@ -56,7 +56,7 @@ class DBUtil(DBInterface):
         pictures = self.get_album_pictures(album_id=album_id)
         divided = [pictures[i:i + PICTURES_IN_PAGE] for i in range(0, len(pictures), PICTURES_IN_PAGE)]
         if page >= len(divided):
-            logging.ERROR(f"required page is out of bounds for given album. album id: {album_id}, page: {page}")
+            logging.WARN(f"required page is out of bounds for given album. album id: {album_id}, page: {page}")
             page = 0
         return divided[page]
 

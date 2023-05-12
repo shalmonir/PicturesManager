@@ -1,8 +1,10 @@
 from werkzeug.datastructures import FileStorage
 
-from src.Configuration.Configuration import AWS_FILES_BUCKET
+from src.Configuration.Configuration import AWS_FILES_BUCKET, AWS_FILES_LIMIT
 from src.Uploaders.UploaderInterface import UploaderInterface
 from src.Utils.AWSUtil import AWSUtil
+
+INVALID_INPUT_RESPONSE = {'': 'File is None - Invalid input'}
 
 
 class AWSUploader(UploaderInterface):
@@ -11,10 +13,10 @@ class AWSUploader(UploaderInterface):
             try:
                 aws_path = f"{store_path}/{file.filename}"
                 self.store_single_using_client(file, aws_path)
-                return True, {file.filename: aws_path}, {}
+                return {file.filename: aws_path}, {}
             except Exception as e:
-                return False, {}, {file.filename: str(e)}
-        return False, {}, {'': 'File is None - Invalid input'}
+                return {}, {file.filename: str(e)}
+        return {}, INVALID_INPUT_RESPONSE
 
     def store_single_using_client(self, file, store_path: str):
         AWSUtil.create_aws_s3_client().upload_fileobj(file, AWS_FILES_BUCKET, store_path)
@@ -24,10 +26,10 @@ class AWSUploader(UploaderInterface):
             try:
                 aws_path = f"{store_path}/{file.filename}"
                 self.store_single_using_client(file, aws_path)
-                return True, {file.filename: aws_path}, {}
+                return {file.filename: aws_path}, {}
             except Exception as e:
-                return False, {}, {file.filename: str(e)}
-        return False, {}, {'': 'File is None - Invalid input'}
+                return {}, {file.filename: str(e)}
+        return {}, INVALID_INPUT_RESPONSE
 
     def get_files_names(self, prefix):
         s3 = AWSUtil.create_aws_s3_resource()
@@ -36,3 +38,10 @@ class AWSUploader(UploaderInterface):
         for objects in my_bucket.objects.filter(Prefix=prefix):
             res.append(objects.key)
         return res
+
+    def pre_upload(self, files):
+        if len(files) > AWS_FILES_LIMIT:
+            raise Exception('upload files limit exceed')
+
+
+

@@ -1,11 +1,11 @@
 import flask_login
 from flask import Blueprint, render_template, request, session
 from flask_login import login_required
-from src.Context.LocalContext import LocalContext
+from src.Context.AWSContext import AWSContext
 from src.Utils.RequestProcessor import RequestProcessor, REQUEST_UPLOAD_NAME, REQUEST_UPLOAD_FILES
 
 dash = Blueprint('dashboard', import_name=__name__)
-context = LocalContext()
+context = AWSContext()
 
 
 @dash.route('/dashboard', methods=['GET', 'POST'])
@@ -20,7 +20,7 @@ def upload():
     if request.method == 'POST':
         request_internal = RequestProcessor.process_upload_request(request)
         files_uploaded, files_failed_upload = \
-            context.upload(request_internal[REQUEST_UPLOAD_FILES], request_internal[REQUEST_UPLOAD_NAME], flask_login.current_user.id)
+            context.upload(request_internal[REQUEST_UPLOAD_FILES], request_internal[REQUEST_UPLOAD_NAME], flask_login.current_user)
         return render_template("upload_summary.html",
                                upload_name=f"{request_internal[REQUEST_UPLOAD_NAME]}",
                                successfully=f"{', '.join([str(file) + ': ' + str(upload_path)  for file, upload_path in files_uploaded.items()])}",
