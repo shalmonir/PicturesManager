@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import List
 
-from flask import current_app
 from werkzeug.datastructures import FileStorage
 
 from src.DB.DBInterface import DBInterface
@@ -10,11 +9,11 @@ from src.Entities.Picture import Picture
 from src.Entities.UploadRequest import UploadRequest
 from src.Entities.User import User
 from src.Report.ReporterInterface import ReporterInterface
-from src.Uploaders.Constants import UPLOAD_STATUS_INIT, UPLOAD_STATUS_PRE_COMPLETED, UPLOAD_STATUS_UPLOADED, \
-    UPLOAD_STATUS_COMPLETED
+from src.Uploaders.Constants import UPLOAD_STATUS_INIT, UPLOAD_STATUS_PRE_COMPLETED, UPLOAD_STATUS_UPLOADED, UPLOAD_STATUS_COMPLETED
 from src.Uploaders.UploaderInterface import UploaderInterface
 
 ALBUM_FETCH_FAILED_ERROR = "Unable to create/retrieve album"
+UPLOAD_FAILED_ERROR = "Upload Failed (general error)"
 
 
 class Context:
@@ -37,22 +36,23 @@ class Context:
         return self.reporter
 
     def upload(self, files: List[FileStorage], album_name: str, user: User):
-        upload_request = self.create_upload_request(user_id=user.id)
+        try:
+            upload_request = self.create_upload_request(user_id=user.id)
+            self.get_uploader().pre_upload(files)
+            self.update_upload_request_pre_completed(upload_request)
 
-        self.get_uploader().pre_upload(files)
-        self.update_upload_request_pre_completed(upload_request)
+            album = self.get_db_utility().fetch_album(album_name=album_name, user_id=user.id)
+            if album is None:
+                self.update_upload_request_failed(upload_request, f"error on album: {album_name}")
+                return {}, {'ALL': ALBUM_FETCH_FAILED_ERROR}
 
-        album = self.get_db_utility().fetch_album(album_name=album_name, user_id=user.id)
-        if album is None:
-            self.update_upload_request_failed(upload_request, ALBUM_FETCH_FAILED_ERROR)
-            raise Exception(f"FAILED: {ALBUM_FETCH_FAILED_ERROR}")
+            succeed, failed = self._upload(files, store_path=self.get_uploader().create_store_path(user, album), album_id=album.id)
 
-        succeed, failed = self._upload(files, store_path=self.get_uploader().create_store_path(user, album), album_id=album.id)
-        upload_request.status = UPLOAD_STATUS_UPLOADED
-        self.get_db_utility().store(upload_request)
-
-        self.update_upload_request_completed(upload_request, len(succeed), len(failed))
-        return succeed, failed
+            self.update_upload_request_completed(upload_request, len(succeed), len(failed))
+            return succeed, failed
+        except Exception as upload_exception:
+            self.update_upload_request_failed(upload_request, str(upload_exception))
+            return {}, {'ALL': UPLOAD_FAILED_ERROR}
 
     def _upload(self, files: List[FileStorage], store_path, album_id: int):
         files_upload_success = {}
@@ -81,6 +81,11 @@ class Context:
     def update_upload_request_completed(self, request: UploadRequest, num_success, num_failed):
         request.status = UPLOAD_STATUS_COMPLETED
         request.content = f"success: {num_success}, fail: {num_failed}"
+        self.get_db_utility().store(request)
+
+    def update_upload_request_failed(self, request: UploadRequest, content):
+        request.status = UPLOAD_FAILED_ERROR
+        request.content = f"failed record: {content}"
         self.get_db_utility().store(request)
 
     def upload_files(self, files, store_path: str, user_id: int):
