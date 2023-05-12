@@ -58,13 +58,16 @@ class Context:
         files_upload_success = {}
         files_upload_fail = {}
         for pic in files:
-            success, fail = self.get_uploader().upload_single_picture(file=pic, store_path=store_path)
-            files_upload_success.update(success)
-            files_upload_fail.update(fail)
-            if len(success) == 1:
-                file_result = next(iter((success.items())))
-                file_name, file_path = file_result[0], file_result[1]
-                self.db_utility.store(Picture(album_id, file_name, file_path))
+            try:
+                success, fail = self.get_uploader().upload_single_picture(file=pic, store_path=store_path)
+                files_upload_success.update(success)
+                files_upload_fail.update(fail)
+                if len(success) == 1:
+                    file_result = next(iter((success.items())))
+                    file_name, file_path = file_result[0], file_result[1]
+                    self.db_utility.store(Picture(album_id, file_name, file_path))
+            except Exception as e:
+                files_upload_fail.update({pic: str(e)})
         return files_upload_success, files_upload_fail
 
     def get_files_names(self, user_id: int):
