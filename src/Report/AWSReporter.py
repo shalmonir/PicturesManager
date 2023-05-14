@@ -12,6 +12,6 @@ class AWSReporter(ReporterInterface):
         self.index = random.randint(10000, 100000)
 
     def report(self, content: str):
-        self.uploader.store_single_using_client(io.BytesIO(content.encode("utf-8")),
-                                                store_path=f"{AWS_REPORT}/{self.index}")
-        self.index += 1
+        self.uploader.store(io.BytesIO(content.encode("utf-8")),
+                            store_path=f"{AWS_REPORT}/{self.index}")
+        self.index = self.index + 1

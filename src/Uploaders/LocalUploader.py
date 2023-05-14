@@ -30,3 +30,6 @@ class LocalUploader(UploaderInterface):
 
     def upload_single_file(self, file, store_path):
         raise NotImplementedError
+
+    def get_files_names(self, prefix):
+        raise NotImplementedError
