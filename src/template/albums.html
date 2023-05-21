@@ -9,10 +9,12 @@
  <div class="cx" style="background-color:#fff;" align="center">
      <h1>{{ user_name }}</h1>
     {% for album in albums %}
-     <a href="{{ url_for('dashboard.show_album', album_id=album.id, album_name=album.name) }}" style="font-size: 40px; text-decoration: none">{{ album.name }}</a></br>
+     <form action="{{ url_for('dashboard.show_album', album_id=album.id, album_name=album.name) }}" method="post">
+        <input type="submit" class="btn" value="{{ album.name }}"></br>
+     </form>
     {% endfor %}
 
-     <br>
+     <br><br><br><br>
      <form action="{{ url_for('dashboard.dashboard') }}" method="post">
         <input type="submit" class="btn" value="Home"></br>
      </form>

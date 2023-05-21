@@ -10,19 +10,22 @@
      {% for picture in pictures %}
     <img src="../../cdn/{{ picture.path }}" height=200 width=200>
     {% endfor %}
+
      <br>
-     <a href="{{ url_for('dashboard.previous_page', album_id=album_id, album_name=album_name) }}" class="previous">&laquo; Previous</a>
-     <a href="{{ url_for('dashboard.next_page', album_id=album_id, album_name=album_name) }}" class="previous">Next &raquo;</a>
-     <br>
+
+     <form action="{{ url_for('dashboard.previous_page', album_id=album_id, album_name=album_name) }}" method="post" style="display: inline;">
+        <input type="submit" class="btn" value="Previous">
+     </form>
+     <form action="{{ url_for('dashboard.next_page', album_id=album_id, album_name=album_name) }}" method="post" style="display: inline;">
+        <input type="submit" class="btn" value="Next">
+     </form>
+
+     <br><br><br>
 
      <form action="{{ url_for('dashboard.dashboard') }}" method="post">
         <input type="submit" class="btn" value="Home"></br>
      </form>
 
-
-     <form action="{{ url_for('dashboard.dashboard') }}" method="post">
-        <input type="submit" class="btn" value="Home"></br>
-     </form>
   </div>
 </body>
 </html>
