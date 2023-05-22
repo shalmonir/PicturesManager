@@ -46,7 +46,7 @@ class Context:
                 self.update_upload_request_failed(upload_request, f"error on album: {album_name}")
                 return {}, {'ALL': ALBUM_FETCH_FAILED_ERROR}
 
-            succeed, failed = self._upload(files, store_path=self.get_uploader().create_store_path(user, album), album_id=album.id)
+            succeed, failed = self._upload(files, store_path=self.get_uploader().create_store_path(user.name, album.name), album_id=album.id)
 
             self.update_upload_request_completed(upload_request, len(succeed), len(failed))
             return succeed, failed

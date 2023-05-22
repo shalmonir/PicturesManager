@@ -47,6 +47,12 @@ def register():
         register_request = RequestProcessor.process_register_request(request)
         if register_request[REQUEST_USER_EMAIL] in ALLOWED_REGISTER_EMAILS:
             try:
+                register_name = register_request[REQUEST_USER_NAME]
+                if context.get_db_utility().get_user_by_name(register_name):
+                    return render_template("error.html", error_msg=f"User name exist - choose different one")
+                if context.get_db_utility().get_user_by_email(register_name):
+                    return render_template("error.html", error_msg=f"Email address already registered")
+
                 context.get_db_utility().store(User(name=register_request[REQUEST_USER_NAME],
                                                     password_hash=hashlib.sha3_512(register_request[REQUEST_USER_PHRASE].encode()).hexdigest(),
                                                     email=register_request[REQUEST_USER_EMAIL]))

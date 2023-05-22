@@ -27,5 +27,9 @@ class DBInterface(ABC):
         pass
 
     @abstractmethod
+    def get_user_by_email(self, email: str):
+        pass
+
+    @abstractmethod
     def fetch_album(self, album_name: str, user_id: int):
         pass

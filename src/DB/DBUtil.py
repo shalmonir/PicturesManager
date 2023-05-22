@@ -24,6 +24,9 @@ class DBUtil(DBInterface):
     def get_user_by_name(self, username: str):
         return self.get_db().session.query(User).filter(User.name == username).first()
 
+    def get_user_by_email(self, email: str):
+        return self.get_db().session.query(User).filter(User.email == email).first()
+
     def get_user_albums(self, user_id: int):
         return self.get_db().session.query(Album).filter(Album.owner_id == user_id).all()
 

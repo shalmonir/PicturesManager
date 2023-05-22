@@ -1,7 +1,5 @@
 from werkzeug.datastructures import FileStorage
 
-from src.Entities import Album, User
-
 
 class UploaderInterface:
 
@@ -11,7 +9,7 @@ class UploaderInterface:
     def pre_upload(self, files):
         pass
 
-    def create_store_path(self, user: User, album: Album):
+    def create_store_path(self, user_name: str, album: str):
         pass
 
     def upload_single_file(self, file, store_path):

@@ -42,3 +42,6 @@ class AWSUploader(UploaderInterface):
 
     def store(self, file, store_path: str):
         AWSUtil.create_aws_s3_client().upload_fileobj(file, AWS_FILES_BUCKET, store_path)
+
+    def create_store_path(self, user_name: str, album_name: str):
+        return f"{user_name}/{album_name}"

@@ -1,6 +1,5 @@
 from werkzeug.datastructures import FileStorage
 
-from src.Entities import Album, User
 from src.Handlers.PictureLocalFileHandler import PictureLocalFileHandler
 from src.Uploaders.UploaderInterface import UploaderInterface
 
@@ -25,8 +24,8 @@ class LocalUploader(UploaderInterface):
     def get_files_names(self, prefix):
         return self.upload_handler.get_all_files(prefix=prefix)
 
-    def create_store_path(self, user: User, album: Album):
-        return f"{user.name}/{album.name}"
+    def create_store_path(self, user_name: str, album_name: str):
+        return f"{user_name}/{album_name}"
 
     def upload_single_file(self, file, store_path):
         raise NotImplementedError
