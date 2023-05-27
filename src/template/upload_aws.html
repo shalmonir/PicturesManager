@@ -1,0 +1,26 @@
+<html>
+<head>
+    <title>Upload files</title>
+</head>
+<body>
+
+<div align="center">
+    <form action="/aws/store" method="POST" enctype="multipart/form-data">
+        <label for="files">Files:   </label>
+        <input type="file" id="file" name="file" multiple/>
+
+        </br><br>
+        Album name:
+        <input id="album_name" name="album_name" type="text" placeholder="Enter Your album name" class="textbox"/>
+        </br><br>
+        <input type="submit" id="submit" value="Upload">
+    </form>
+
+    <form action="{{ url_for('dashboard.dashboard') }}" method="post">
+        <input type="submit" class="btn" value="Home"></br>
+    </form>
+</div>
+
+
+</body>
+</html>
