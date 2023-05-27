@@ -10,7 +10,7 @@ from src.Entities.UploadRequest import UploadRequest
 from src.Entities.User import User
 from src.Report.ReporterInterface import ReporterInterface
 from src.Uploaders.Constants import UPLOAD_STATUS_INIT, UPLOAD_STATUS_PRE_COMPLETED, UPLOAD_STATUS_UPLOADED, UPLOAD_STATUS_COMPLETED
-from src.Uploaders.UploaderInterface import UploaderInterface
+from src.Uploaders.CommunicationInterface import CommunicationInterface
 
 ALBUM_FETCH_FAILED_ERROR = "Unable to create/retrieve album"
 UPLOAD_FAILED_ERROR = "Upload Failed (general error)"
@@ -19,14 +19,14 @@ UPLOAD_FAILED_ERROR = "Upload Failed (general error)"
 class Context:
     db_utility: DBInterface
     reporter: ReporterInterface
-    uploader: UploaderInterface
+    uploader: CommunicationInterface
 
     def __init__(self):
         self.uploader = None
         self.db_utility = None
         self.reporter = None
 
-    def get_uploader(self) -> UploaderInterface:
+    def get_uploader(self) -> CommunicationInterface:
         return self.uploader
 
     def get_db_utility(self) -> DBInterface:
@@ -41,7 +41,7 @@ class Context:
             self.get_uploader().pre_upload(files)
             self.update_upload_request_pre_completed(upload_request)
 
-            album = self.get_db_utility().fetch_album(album_name=album_name, user_id=user.id)
+            album = self.get_db_utility().obtain_album(album_name=album_name, user_id=user.id)
             if album is None:
                 self.update_upload_request_failed(upload_request, f"error on album: {album_name}")
                 return {}, {'ALL': ALBUM_FETCH_FAILED_ERROR}

@@ -48,7 +48,7 @@ class DBUtil(DBInterface):
         self.get_db().session.commit()
         return entity
 
-    def fetch_album(self, album_name: str, user_id: int):
+    def obtain_album(self, album_name: str, user_id: int):
         album_query = self.match_user_albums(user_id=user_id, match_name=album_name)
         if len(album_query) == 0:
             return self.store(Album(name=album_name, owner_id=user_id))

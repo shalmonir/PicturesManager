@@ -6,11 +6,14 @@ from botocore.exceptions import ClientError
 from flask import Blueprint, send_from_directory, current_app, send_file
 from flask_login import login_required
 
+from src.Configuration.Configuration import AWS_VIDEO_BUCKET
+from src.Downloaders import AWSDownloader
 from src.Utils.AWSUtil import AWSUtil
 
 ERROR_RESPONSE = 'fail'
 
 download = Blueprint('download', import_name=__name__)
+
 
 @download.route('/cdn/<path:filepath>')
 @login_required
@@ -29,6 +32,24 @@ def aws_download(filepath):
         s3_client = AWSUtil.create_aws_s3_client()
         file = io.BytesIO()
         S3_BUCKET = 'nirpicturestest'
+        metadata = s3_client.head_object(Bucket=S3_BUCKET, Key=filepath)
+        conf = boto3.s3.transfer.TransferConfig(use_threads=False)
+        s3_client.download_fileobj(S3_BUCKET, filepath, file)
+        current_app.logger.debug(f"retrieving filepath: {filepath}")
+        file.seek(0)
+        return send_file(file, mimetype=metadata['ContentType'])
+    except ClientError:
+        return ERROR_RESPONSE
+    except Exception:
+        return ERROR_RESPONSE
+
+@download.route('/aws/video/<path:filepath>')
+@login_required
+def aws_video(filepath):
+    try:
+        s3_client = AWSUtil.create_aws_s3_client()
+        file = io.BytesIO()
+        S3_BUCKET = AWS_VIDEO_BUCKET
         metadata = s3_client.head_object(Bucket=S3_BUCKET, Key=filepath)
         conf = boto3.s3.transfer.TransferConfig(use_threads=False)
         s3_client.download_fileobj(S3_BUCKET, filepath, file)

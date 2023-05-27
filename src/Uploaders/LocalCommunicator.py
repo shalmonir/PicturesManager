@@ -1,10 +1,10 @@
 from werkzeug.datastructures import FileStorage
 
 from src.Handlers.PictureLocalFileHandler import PictureLocalFileHandler
-from src.Uploaders.UploaderInterface import UploaderInterface
+from src.Uploaders.CommunicationInterface import CommunicationInterface
 
 
-class LocalUploader(UploaderInterface):
+class LocalCommunicator(CommunicationInterface):
     upload_handler = PictureLocalFileHandler()
 
     def pre_upload(self, files):

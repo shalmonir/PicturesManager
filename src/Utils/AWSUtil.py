@@ -1,3 +1,5 @@
+import io
+
 import boto3
 
 from src.Configuration.Configuration import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_NAME
@@ -19,3 +21,12 @@ class AWSUtil:
             aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
             service_name=AWS_S3_NAME)
         return s3_resource
+
+    @staticmethod
+    def get_file(path, bucket):
+        try:
+            client = AWSUtil.create_aws_s3_client()
+            file = io.BytesIO()
+            return client.download_fileobj(bucket, path, file)
+        except Exception as error:
+            print(error)

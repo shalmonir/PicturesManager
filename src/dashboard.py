@@ -1,3 +1,5 @@
+from string import Template
+
 import flask_login
 from flask import Blueprint, render_template, request, session
 from flask_login import login_required

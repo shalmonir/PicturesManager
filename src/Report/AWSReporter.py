@@ -3,12 +3,12 @@ import random
 
 from src.Configuration.Configuration import AWS_REPORT
 from src.Report.ReporterInterface import ReporterInterface
-from src.Uploaders.AWSUploader import AWSUploader
+from src.Uploaders.AWSCommunicator import AWSCommunicator
 
 
 class AWSReporter(ReporterInterface):
     def __init__(self):
-        self.uploader = AWSUploader()
+        self.uploader = AWSCommunicator()
         self.index = random.randint(10000, 100000)
 
     def report(self, content: str):

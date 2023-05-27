@@ -1,18 +1,19 @@
-import io
-
-import boto3
-
-from src.Configuration.Configuration import AWS_FILES_BUCKET
+from src.Configuration.Configuration import AWS_FILES_BUCKET, AWS_VIDEO_BUCKET
 from src.Utils.AWSUtil import AWSUtil
 
 
 class AWSDownloader:
+    def __init__(self):
+        pass
+
     @staticmethod
-    def download(self, path):
-        s3 = AWSUtil.create_aws_s3_client()
-        file = io.BytesIO()
-        metadata = s3.head_object(Bucket=AWS_FILES_BUCKET, Key=path)
-        conf = boto3.s3.transfer.TransferConfig(use_threads=False)
-        s3.download_fileobj(AWS_FILES_BUCKET, path, file)
+    def download(path):
+        file = AWSUtil.get_file(path, AWS_FILES_BUCKET)
         file.seek(0)
-        return file, metadata
+        return file
+
+    @staticmethod
+    def video(path):
+        file = AWSUtil.get_file(path, AWS_VIDEO_BUCKET)
+        file.seek(0)
+        return file

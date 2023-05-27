@@ -1,13 +1,13 @@
 from werkzeug.datastructures import FileStorage
 
 from src.Configuration.Configuration import AWS_FILES_BUCKET, AWS_FILES_LIMIT
-from src.Uploaders.UploaderInterface import UploaderInterface
+from src.Uploaders.CommunicationInterface import CommunicationInterface
 from src.Utils.AWSUtil import AWSUtil
 
 INVALID_INPUT_RESPONSE = {'': 'File is None - Invalid input'}
 
 
-class AWSUploader(UploaderInterface):
+class AWSCommunicator(CommunicationInterface):
     def upload_single_picture(self, file: FileStorage, store_path=None):
         if file is not None:
             try:
