@@ -81,3 +81,15 @@ def previous_page(album_id, album_name):
 def render_gallery(album_id, album_name, page):
     return render_template("gallery.html", album_name=album_name,
                            pictures=context.get_db_utility().get_album_pictures_page(album_id, page), album_id=album_id)
+
+
+@dash.route("/saba", methods=['POST', 'GET'])
+@dash.route("/saba/<part>", methods=['POST', 'GET'])
+@login_required
+def saba(part=1):
+    if part <= 0 or part > 5:
+        part = 1
+    video_template = Template('Saba_Haim_Part_$num.mp4')
+    nextp = int(part) + 1
+    prevp = int(part) - 1
+    return render_template("content_pages/saba_haim.html", video_url=video_template.substitute(num=str(part)), next=str(nextp), prev=str(prevp))
