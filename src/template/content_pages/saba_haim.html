@@ -18,6 +18,12 @@
         <form action="{{ url_for('dashboard.saba', part=next) }}" method="post" style="display: inline;">
             <input type="submit" class="btn" value="Next">
         </form>
+
+        <br><br>
+
+        <form action="{{ url_for('dashboard.dashboard') }}" method="post">
+        <input type="submit" class="btn" value="Home"></br>
+     </form>
     </div>
 </body>
 </html>

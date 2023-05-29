@@ -8,10 +8,9 @@
  <div class="cx" style="background-color:#fff;" align="center">
      <h1>{{ album_name }}</h1>
      <br>
-     <h1>AWS method</h1>
      {% for picture in pictures %}
-    <img src="../../aws/{{ picture.path }}" height=200 width=200>
-    {% endfor %}
+        <img src="../../aws/{{ picture.path }}" height=200 width=200>
+     {% endfor %}
 
      <form action="{{ url_for('dashboard.previous_page', album_id=album_id, album_name=album_name) }}" method="post" style="display: inline;">
         <input type="submit" class="btn" value="Previous">
