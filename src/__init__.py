@@ -16,8 +16,6 @@ from sqlalchemy_utils import database_exists, create_database
 
 
 def create_app():
-    if os.name != 'nt':
-        link_store_directory()
     app = Flask(__name__, template_folder='template')
     app.config.from_object(Config())
     define_blueprints(app)
@@ -28,13 +26,6 @@ def create_app():
     except Exception as e:
         print(e)
     return app
-
-
-def link_store_directory():
-    src = '/pictures'
-    dst = '/python-docker/src/pictures'
-    if not os.path.exists(dst):
-        os.symlink(src, dst)
 
 
 def define_blueprints(app):

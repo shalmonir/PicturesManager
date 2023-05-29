@@ -87,9 +87,10 @@ def render_gallery(album_id, album_name, page):
 @dash.route("/saba/<part>", methods=['POST', 'GET'])
 @login_required
 def saba(part=1):
-    if part <= 0 or part > 5:
+    part_number = int(part)
+    if part_number <= 0 or part_number > 5:
         part = 1
     video_template = Template('Saba_Haim_Part_$num.mp4')
-    nextp = int(part) + 1
-    prevp = int(part) - 1
+    nextp = part_number + 1
+    prevp = part_number - 1
     return render_template("content_pages/saba_haim.html", video_url=video_template.substitute(num=str(part)), next=str(nextp), prev=str(prevp))

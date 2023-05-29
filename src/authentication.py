@@ -48,14 +48,15 @@ def register():
         if register_request[REQUEST_USER_EMAIL] in ALLOWED_REGISTER_EMAILS:
             try:
                 register_name = register_request[REQUEST_USER_NAME]
+                register_email = register_request[REQUEST_USER_EMAIL]
                 if context.get_db_utility().get_user_by_name(register_name):
                     return render_template("error.html", error_msg=f"User name exist - choose different one")
-                if context.get_db_utility().get_user_by_email(register_name):
+                if context.get_db_utility().get_user_by_email(register_email):
                     return render_template("error.html", error_msg=f"Email address already registered")
 
                 context.get_db_utility().store(User(name=register_request[REQUEST_USER_NAME],
                                                     password_hash=hashlib.sha3_512(register_request[REQUEST_USER_PHRASE].encode()).hexdigest(),
-                                                    email=register_request[REQUEST_USER_EMAIL]))
+                                                    email=register_email))
             except Exception as e:
                 return render_template("error.html", error_msg=f"Registration Failed :(, reason: {e}")
             return render_template("error.html", error_msg=f"Registration Succeed :)")

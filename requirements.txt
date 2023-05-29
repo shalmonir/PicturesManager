@@ -8,3 +8,4 @@ psycopg2==2.9.6
 flask-bootstrap
 sqlalchemy_utils
 boto3
+gunicorn
