@@ -12,6 +12,8 @@
         <img src="../../aws/{{ picture.path }}" height=200 width=200>
      {% endfor %}
 
+     <br><br><br>
+
      <form action="{{ url_for('dashboard.previous_page', album_id=album_id, album_name=album_name) }}" method="post" style="display: inline;">
         <input type="submit" class="btn" value="Previous">
      </form>
