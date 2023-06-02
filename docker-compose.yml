@@ -47,7 +47,7 @@ services:
 
   certbot:
     image: certbot/certbot
-    container_name: certificate
+    container_name: certificateService
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot

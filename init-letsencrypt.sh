@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(polyz.click www.polyz.click)
+domains=(polyz.click)
 rsa_key_size=4096
 data_path="./data/certbot"
 email="shalmonir@gmail.com"
