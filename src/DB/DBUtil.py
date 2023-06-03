@@ -18,7 +18,7 @@ class DBUtil(DBInterface):
     def get_user(self, user_id: int):
         return self.get_db().session.query(User).filter_by(id=user_id).scalar()
 
-    def get_album(self, album_id: int):
+    def get_album_by_user(self, album_id: int):
         return self.get_db().session.query(Album).filter_by(id=album_id).scalar()
 
     def get_user_by_name(self, username: str):
@@ -27,12 +27,12 @@ class DBUtil(DBInterface):
     def get_user_by_email(self, email: str):
         return self.get_db().session.query(User).filter(User.email == email).first()
 
-    def get_user_albums(self, user_id: int):
+    def get_albums_by_user(self, user_id: int):
         return self.get_db().session.query(Album).filter(Album.owner_id == user_id).all()
 
     def search_user_albums(self, user_id: int, keyword: str) -> List[Album]:
         res = []
-        for album in self.get_user_albums(user_id=user_id):
+        for album in self.get_albums_by_user(user_id=user_id):
             if keyword in album.name:
                 res.append(album)
         return res
@@ -40,7 +40,7 @@ class DBUtil(DBInterface):
     def match_user_albums(self, user_id: int, match_name: str) -> List[Album]:
         return self.get_db().session.query(Album).filter(Album.owner_id == user_id).filter(Album.name == match_name).all()
 
-    def get_album_pictures(self, album_id: int):
+    def get_pictures_by_album(self, album_id: int):
         return self.get_db().session.query(Picture).filter(Picture.album_id == album_id).all()
 
     def store(self, entity):
@@ -56,7 +56,7 @@ class DBUtil(DBInterface):
             return album_query[0]
 
     def get_album_pictures_page(self, album_id: int, page: int):
-        pictures = self.get_album_pictures(album_id=album_id)
+        pictures = self.get_pictures_by_album(album_id=album_id)
         divided = [pictures[i:i + PICTURES_IN_PAGE] for i in range(0, len(pictures), PICTURES_IN_PAGE)]
         if page >= len(divided):
             logging.WARN(f"required page is out of bounds for given album. album id: {album_id}, page: {page}")
@@ -64,5 +64,5 @@ class DBUtil(DBInterface):
         return divided[page]
 
     def get_album_pictures_pages_amount(self, album_id: int):
-        pictures_amount = len(self.get_album_pictures(album_id=album_id))
+        pictures_amount = len(self.get_pictures_by_album(album_id=album_id))
         return int(pictures_amount / PICTURES_IN_PAGE) + (pictures_amount % PICTURES_IN_PAGE > 0)

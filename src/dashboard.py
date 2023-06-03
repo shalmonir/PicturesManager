@@ -43,7 +43,7 @@ def search_user_albums():
 @login_required
 def show_user_albums():
     user = flask_login.current_user
-    user_albums = context.get_db_utility().get_user_albums(user_id=user.id)
+    user_albums = context.get_db_utility().get_albums_by_user(user_id=user.id)
     return render_template("albums.html", user_name=user.name, albums=user_albums)
 
 
