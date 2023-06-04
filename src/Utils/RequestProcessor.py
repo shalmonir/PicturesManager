@@ -2,6 +2,14 @@ import logging
 
 from flask import Request
 
+ALBUM_KEYWORD = 'album_keyword'
+
+REQUEST_UPLOAD_NAME = 'upload_name'
+REQUEST_UPLOAD_FILES = 'file'
+REQUEST_USER_NAME = 'username'
+REQUEST_USER_PHRASE = 'user_phrase'
+REQUEST_USER_EMAIL = 'email'
+
 
 class ProcessRequestException(Exception):
     def __init__(self):
@@ -13,15 +21,17 @@ class RequestProcessor:
     @staticmethod
     def process_upload_request(user_request: Request) -> dict:
         try:
-            return {'files': user_request.files.getlist("file"), 'album_name': user_request.form['album_name']}
+            return {REQUEST_UPLOAD_FILES: user_request.files.getlist(REQUEST_UPLOAD_FILES),
+                    REQUEST_UPLOAD_NAME: user_request.form[REQUEST_UPLOAD_NAME]}
         except Exception as e:
-            logging.ERROR('upload input error: ' + str(e))
+            logging.ERROR(f"upload input error: {e}")
             raise ProcessRequestException()
 
     @staticmethod
     def process_login_request(login_request: Request) -> dict:
         try:
-            return {'password': login_request.form["password"], 'username': login_request.form['username']}
+            return {REQUEST_USER_PHRASE: login_request.form[REQUEST_USER_PHRASE],
+                    REQUEST_USER_NAME: login_request.form[REQUEST_USER_NAME]}
         except Exception as e:
             logging.ERROR('login input error: ' + str(e))
             raise ProcessRequestException()
@@ -29,7 +39,7 @@ class RequestProcessor:
     @staticmethod
     def process_search_request(search_request: Request) -> dict:
         try:
-            return {'album_keyword': search_request.form["album_keyword"]}
+            return {ALBUM_KEYWORD: search_request.form[ALBUM_KEYWORD]}
         except Exception as e:
             logging.ERROR('login input error: ' + str(e))
             raise ProcessRequestException()
@@ -37,8 +47,8 @@ class RequestProcessor:
     @staticmethod
     def process_register_request(register_request: Request) -> dict:
         try:
-            return {'password': register_request.form["password"], 'email': register_request.form['email'],
-                    'name': register_request.form['name']}
+            return {REQUEST_USER_PHRASE: register_request.form[REQUEST_USER_PHRASE], REQUEST_USER_EMAIL: register_request.form[REQUEST_USER_EMAIL],
+                    REQUEST_USER_NAME: register_request.form[REQUEST_USER_NAME]}
         except Exception as e:
             logging.ERROR('register input error: ' + str(e))
             raise ProcessRequestException()

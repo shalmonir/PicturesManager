@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AWS get page</title>
+</head>
+<body>
+<div align="center">
+    File name:
+    <form action="/aws/get" method="POST" enctype="multipart/form-data">
+        <input id="file_name" name="file_name" type="text" placeholder="Enter Your file name" class="textbox"/>
+    </form>
+
+    <h1>{{ str_printable }}</h1>
+
+    {% for file in files %}
+    <a href="{{ url_for('aws.get_directory', sub_directory=file) }}" style="font-size: 40px; text-decoration: none">{{ file }}</a></br>
+    {% endfor %}
+
+    <br><br><br>
+
+    <form action="{{ url_for('dashboard.dashboard') }}" method="post">
+        <input type="submit" class="btn" value="Home">
+    </form>
+</div>
+</body>
+</html>

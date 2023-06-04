@@ -13,13 +13,18 @@
             <h2 class="word">
                 <form action="{{ url_for('auth.register') }}" method="post">
                   <div class="msg">{{ msg }}</div>
-                    <input id="name" name="name" type="text" placeholder="Enter Your Name" class="textbox"/></br></br>
+                    <input id="username" name="username" type="text" placeholder="Enter Your Name" class="textbox"/></br></br>
                     <input id="email" name="email" type="text" placeholder="Enter Your Email" class="textbox"/></br></br>
-                    <input id="password" name="password" type="password" placeholder="Enter Your Password" class="textbox"/></br></br></br>
+                    <input id="user_phrase" name="user_phrase" type="password" placeholder="Enter Your Password" class="textbox"/></br></br></br>
                     <input type="submit" class="btn" value="Register"></br></br>
                 </form>
             </h2>
           </div>
+            <form action="{{ url_for('auth.log_out') }}" method="post">
+                <input type="submit" class="btn" value="Home"></br>
+            </form>
         </div>
+
+
     </body>
 </html>

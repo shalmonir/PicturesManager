@@ -1,17 +1,16 @@
 <html>
 <head>
-    <title>Upload files</title>
+    <title>Upload files to AWS storage</title>
 </head>
 <body>
 
 <div align="center">
-    <form action="/upload" method="POST" enctype="multipart/form-data">
+    <form action="/aws/store" method="POST" enctype="multipart/form-data">
         <label for="files">Files:   </label>
         <input type="file" id="file" name="file" multiple/>
-
         </br><br>
-        Album name:
-        <input id="upload_name" name="upload_name" type="text" placeholder="Enter Your album name" class="textbox"/>
+        Directory:
+        <input id="upload_name" name="upload_name" type="text" placeholder="directory name" class="textbox"/>
         </br><br>
         <input type="submit" id="submit" value="Upload">
     </form>

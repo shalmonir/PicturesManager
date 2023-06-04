@@ -22,9 +22,6 @@ services:
     build: .
     ports:
       - 5000:5000
-    volumes:
-      - .:/app
-      - pictures:/pictures
     depends_on:
       - postgres
     environment:
@@ -33,7 +30,28 @@ services:
       - POSTGRES_PASSWORD=test
       - POSTGRES_PORT_5432_TCP_ADDR=postgresql
       - POSTGRES_PORT_5432_TCP_PORT=5432
-    entrypoint: [ "python", "app.py"]
+
+  nginx:
+    container_name: nginxWebServer
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    depends_on:
+      - app
+    ports:
+      - 80:80
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  certbot:
+    image: certbot/certbot
+    container_name: certificateService
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
 volumes:
   db-data: {}

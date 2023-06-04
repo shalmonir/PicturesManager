@@ -6,6 +6,7 @@ from src.Configuration.Config import Config
 from src.Configuration.Configuration import DB_SECRET
 from src.DB.DBConnectionMgr import DBConnectionMgr
 from src.authentication import auth
+from src.aws_serve import aws
 from src.dashboard import dash
 from src.download import download
 from src.external import login_manager, db
@@ -15,8 +16,6 @@ from sqlalchemy_utils import database_exists, create_database
 
 
 def create_app():
-    if os.name != 'nt':
-        link_store_directory()
     app = Flask(__name__, template_folder='template')
     app.config.from_object(Config())
     define_blueprints(app)
@@ -29,17 +28,11 @@ def create_app():
     return app
 
 
-def link_store_directory():
-    src = '/pictures'
-    dst = '/python-docker/src/pictures'
-    if not os.path.exists(dst):
-        os.symlink(src, dst)
-
-
 def define_blueprints(app):
     app.register_blueprint(auth)
     app.register_blueprint(dash)
     app.register_blueprint(download)
+    app.register_blueprint(aws)
 
 
 def define_externals(app):

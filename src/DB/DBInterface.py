@@ -7,7 +7,7 @@ class DBInterface(ABC):
         pass
 
     @abstractmethod
-    def get_user_albums(self, user_id: int):
+    def get_albums_by_user(self, user_id: int):
         pass
 
     @abstractmethod
@@ -15,11 +15,11 @@ class DBInterface(ABC):
         pass
 
     @abstractmethod
-    def get_album(self, user_id: int):
+    def get_album_by_user(self, user_id: int):
         pass
 
     @abstractmethod
-    def get_album_pictures(self, album_id: int):
+    def get_pictures_by_album(self, album_id: int):
         pass
 
     @abstractmethod
@@ -27,5 +27,9 @@ class DBInterface(ABC):
         pass
 
     @abstractmethod
-    def get_else_create_album(self, album_name: str, user_id: int):
+    def get_user_by_email(self, email: str):
+        pass
+
+    @abstractmethod
+    def obtain_album(self, album_name: str, user_id: int):
         pass

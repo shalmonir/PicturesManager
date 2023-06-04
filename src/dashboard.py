@@ -1,11 +1,13 @@
+from string import Template
+
 import flask_login
 from flask import Blueprint, render_template, request, session
 from flask_login import login_required
-from src.Context.LocalContextMgr import LocalContextMgr
-from src.Utils.RequestProcessor import RequestProcessor
+from src.Context.AWSContext import AWSContext
+from src.Utils.RequestProcessor import RequestProcessor, REQUEST_UPLOAD_NAME, REQUEST_UPLOAD_FILES
 
 dash = Blueprint('dashboard', import_name=__name__)
-context = LocalContextMgr()
+context = AWSContext()
 
 
 @dash.route('/dashboard', methods=['GET', 'POST'])
@@ -19,9 +21,10 @@ def dashboard():
 def upload():
     if request.method == 'POST':
         request_internal = RequestProcessor.process_upload_request(request)
-        files_uploaded, files_failed_upload = context.upload(request_internal['files'], request_internal['album_name'], flask_login.current_user.id)
+        files_uploaded, files_failed_upload = \
+            context.upload(request_internal[REQUEST_UPLOAD_FILES], request_internal[REQUEST_UPLOAD_NAME], flask_login.current_user)
         return render_template("upload_summary.html",
-                               album=f"{request_internal['album_name']}",
+                               upload_name=f"{request_internal[REQUEST_UPLOAD_NAME]}",
                                successfully=f"{', '.join([str(file) + ': ' + str(upload_path)  for file, upload_path in files_uploaded.items()])}",
                                failed=f"{', '.join([str(file) + '(' + reason + '), ' for file, reason in files_failed_upload.items()])}")
     return render_template('upload.html')
@@ -40,7 +43,7 @@ def search_user_albums():
 @login_required
 def show_user_albums():
     user = flask_login.current_user
-    user_albums = context.get_db_utility().get_user_albums(user_id=user.id)
+    user_albums = context.get_db_utility().get_albums_by_user(user_id=user.id)
     return render_template("albums.html", user_name=user.name, albums=user_albums)
 
 
@@ -78,3 +81,16 @@ def previous_page(album_id, album_name):
 def render_gallery(album_id, album_name, page):
     return render_template("gallery.html", album_name=album_name,
                            pictures=context.get_db_utility().get_album_pictures_page(album_id, page), album_id=album_id)
+
+
+@dash.route("/saba", methods=['POST', 'GET'])
+@dash.route("/saba/<part>", methods=['POST', 'GET'])
+@login_required
+def saba(part=1):
+    part_number = int(part)
+    if part_number <= 0 or part_number > 5:
+        part = 1
+    video_template = Template('Saba_Haim_Part_$num.mp4')
+    nextp = part_number + 1
+    prevp = part_number - 1
+    return render_template("content_pages/saba_haim.html", video_url=video_template.substitute(num=str(part)), next=str(nextp), prev=str(prevp))

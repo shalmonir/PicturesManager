@@ -1,4 +1,6 @@
 import logging
+import os
+
 from src.Configuration.Configuration import PATH_TO_LOCAL_STORAGE, SEPERATOR
 
 
@@ -38,3 +40,6 @@ class PictureLocalFileHandler:
         except Exception:
             logging.error("Failed reading file: " + picture_file_path)
             raise ReadLocalFileException()
+
+    def get_all_files(self, prefix=''):
+        return os.listdir(PATH_TO_LOCAL_STORAGE + prefix)

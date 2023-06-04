@@ -8,7 +8,6 @@ COPY requirements.txt requirements.txt
 
 RUN apt-get update
 RUN apt-get -y install curl
-# RUN apt-get install -y postgresql
 RUN apt-get install -y libpq-dev gcc
 RUN export PATH=/usr/lib/postgresql/X.Y/bin/:$PATH
 RUN apt-get install -y python3-dev
@@ -18,5 +17,5 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD [ "python3", "app.py"]
+CMD gunicorn --bind 0.0.0.0:5000 app:app
 
