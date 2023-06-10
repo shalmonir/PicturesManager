@@ -1,5 +1,6 @@
 import flask_login
 from flask import Blueprint, render_template, request
+from flask_login import login_required
 
 from src.Configuration.Configuration import SEPERATOR
 from src.Context.AWSContext import AWSContext
@@ -12,12 +13,14 @@ context = AWSContext()
 
 
 @aws.route("/aws/get", methods=['POST', 'GET'])
+@login_required
 def get():
     user = flask_login.current_user
     return render_template("aws_get_page.html", str_printable=f"Files:", files=context.get_files_names(user.name))
 
 
 @aws.route("/aws/get/<sub_directory>", methods=['POST', 'GET'])
+@login_required
 def get_directory(sub_directory):
     user = flask_login.current_user
     if request.method == 'POST' or sub_directory:
@@ -26,6 +29,7 @@ def get_directory(sub_directory):
 
 
 @aws.route("/aws/store", methods=['POST', 'GET'])
+@login_required
 def store():
     if request.method == 'POST':
         user = flask_login.current_user

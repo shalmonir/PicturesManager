@@ -3,8 +3,11 @@ from string import Template
 import flask_login
 from flask import Blueprint, render_template, request, session
 from flask_login import login_required
+
+from src.Configuration.Configuration import VIDEO_PARTS
 from src.Context.AWSContext import AWSContext
 from src.Utils.RequestProcessor import RequestProcessor, REQUEST_UPLOAD_NAME, REQUEST_UPLOAD_FILES
+
 
 dash = Blueprint('dashboard', import_name=__name__)
 context = AWSContext()
@@ -13,7 +16,7 @@ context = AWSContext()
 @dash.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    return render_template("home.html", str_printable='dash aaaaa')
+    return render_template("home.html")
 
 
 @dash.route("/upload", methods=['POST', 'GET'])
@@ -88,9 +91,25 @@ def render_gallery(album_id, album_name, page):
 @login_required
 def saba(part=1):
     part_number = int(part)
-    if part_number <= 0 or part_number > 5:
-        part = 1
+    if part_number > VIDEO_PARTS:
+        part = part % VIDEO_PARTS
+    if part_number < 1:
+        render_template("content_pages/saba_haim.html", video_url='Saba_Haim_Part_1.mp4',
+                        next='2', prev='0')
     video_template = Template('Saba_Haim_Part_$num.mp4')
     nextp = part_number + 1
     prevp = part_number - 1
-    return render_template("content_pages/saba_haim.html", video_url=video_template.substitute(num=str(part)), next=str(nextp), prev=str(prevp))
+    return render_template("content_pages/saba_haim.html",
+                           video_url=video_template.substitute(num=str(part)), next=str(nextp), prev=str(prevp))
+
+
+@dash.route("/about", methods=['POST', 'GET'])
+@login_required
+def about():
+    return render_template("about.html")
+
+
+@dash.route('/main', methods=['GET', 'POST'])
+@login_required
+def main():
+    return render_template("main.html")
