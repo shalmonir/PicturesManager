@@ -21,6 +21,18 @@
           </div>
         </div>
         </br></br></br>
+
+        <div align="center">
+            <div class="header">
+                <h1 class="word">Guest Access Here</h1>
+             </div>
+            <form action="{{ url_for('dashboard.main_view') }}" method="get">
+                    <div class="msg">{{ msg }}</div>
+                    <input type="submit" class="btn" value="Guest Sign In">
+                </form>
+        </div>
+
+        </br></br></br>
         <div align="center">
           <div align="center" class="border">
              <div class="header">
