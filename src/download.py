@@ -43,8 +43,8 @@ def aws_download(filepath):
     except Exception:
         return ERROR_RESPONSE
 
+
 @download.route('/aws/video/<path:filepath>')
-@login_required
 def aws_video(filepath):
     try:
         s3_client = AWSUtil.create_aws_s3_client()
