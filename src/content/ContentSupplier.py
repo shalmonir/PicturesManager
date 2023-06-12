@@ -16,4 +16,4 @@ class ContentSupplier:
         next_part = part_number + 1
         prev_part = part_number - 1
         return render_template(page, video_url=video_template.substitute(num=str(part)),
-                               next=str(next_part), prev=str(prev_part))
+                               next=str(next_part), prev=str(prev_part), curr=str(part))
