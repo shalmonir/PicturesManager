@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+        <title>Software Development</title>
+        <style>
+            body
+            {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            .topnav
+            {
+                overflow: hidden;
+                background-color: #333;
+            }
+            .topnav a
+            {
+                float: left;
+                color: #f2f2f2;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+            .topnav a:hover
+            {
+                background-color: #ddd;
+                color: black;
+            }
+            .topnav a.active
+            {
+                background-color: #04AA6D;
+                color: white;
+            }
+            .topnav a.split
+            {
+              float: right;
+              background-color: #04AA6D;
+              color: white;
+            }
+            .sticky
+            {
+              position: fixed;
+              top: 0;
+              width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="{{ url_for('dashboard.main_view') }}">Home</a>
+            <a href="{{ url_for('dashboard.saba_haim', part=1) }}" >Saba Haim Video</a>
+            <a href="{{ url_for('dashboard.inspiration_page') }}" >Inspiration</a>
+            <a href="{{ url_for('dashboard.sw_dev_page') }}" class="active" >Software Development</a>
+            <a href="{{ url_for('dashboard.about') }}" class="split active">About</a>
+        </div>
+
+        <div class="header">
+            <h1>Software Development</h1>
+        </div>
+
+        <div align="left">
+            <p  style="width:400px;" align="left">
+                The source code for this web server could be found here:
+
+                <br>
+                <p><a href="https://github.com/shalmonir/PicturesManager">Pictures Manager Repository</a></p>
+                <br>
+
+            </p>
+        </div>
+
+        <br>
+        <br>
+        <br>
+
+        <div>
+            <form action="{{ url_for('dashboard.dashboard') }}" method="post">
+                <input type="submit" class="btn" value="Home"></br>
+             </form>
+        </div>
+
+    </body>
+</html>
