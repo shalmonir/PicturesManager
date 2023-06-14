@@ -2,7 +2,7 @@ import os
 from datetime import timedelta
 
 from flask import Flask
-from src.Configuration.Config import Config
+from src.Configuration.FlaskApplicationConfig import FlaskApplicationConfig
 from src.Configuration.Configuration import DB_SECRET
 from src.DB.DBConnectionMgr import DBConnectionMgr
 from src.authentication import auth
@@ -17,7 +17,7 @@ from sqlalchemy_utils import database_exists, create_database
 
 def create_app():
     app = Flask(__name__, template_folder='template')
-    app.config.from_object(Config())
+    app.config.from_object(FlaskApplicationConfig())
     define_blueprints(app)
     define_externals(app)
     define_sessions(app)

@@ -107,3 +107,13 @@ def about():
 @dash.route('/main_view', methods=['GET', 'POST'])
 def main_view():
     return render_template("main.html")
+
+
+@dash.route('/inspiration_page', methods=['GET', 'POST'])
+def inspiration_page():
+    return render_template("content_pages/inspiration.html")
+
+
+@dash.route('/sw_dev_page', methods=['GET', 'POST'])
+def sw_dev_page():
+    return render_template("content_pages/software_development.html")

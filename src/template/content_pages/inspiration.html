@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
-        <title>Memories Manager</title>
+        <title>Inspiration</title>
         <style>
             body
             {
@@ -50,53 +50,37 @@
     <body>
         <div class="topnav">
             <a href="{{ url_for('dashboard.main_view') }}">Home</a>
-            <a href="{{ url_for('dashboard.saba_haim', part=1) }}" class="active" >Saba Haim Video</a>
-            <a href="{{ url_for('dashboard.inspiration_page') }}" >Inspiration</a>
+            <a href="{{ url_for('dashboard.saba_haim', part=1) }}" >Saba Haim Video</a>
+            <a href="{{ url_for('dashboard.inspiration_page') }}" class="active" >Inspiration</a>
             <a href="{{ url_for('dashboard.sw_dev_page') }}" >Software Development</a>
-            <a href="{{ url_for('dashboard.about') }}" class="split">About</a>
+            <a href="{{ url_for('dashboard.about') }}" class="split active">About</a>
         </div>
 
         <div class="header">
-            <h1>Saba Haim - Testimony</h1>
+            <h1>Inspiration</h1>
         </div>
 
         <div align="left">
-        <p>
-            In the memory of Haim Shalmon (shlufman).
-            There are 5 parts (~30 min each).
-        </p>
-        <br>
-        <p>
-            לזכר סבא חיים שלמון (שלופמן).
-            כחמישה חלקים (~חצי שעה כל אחד).
-        </p>
-        <br><br>
-            <h2>Part: {{ curr }}</h2>
-        <br>
-
-        <video width="320" height="240" controls>
-            <source src="../../aws/video/{{ video_url }}" type="video/mp4">
-        </video>
-
-        <br><br>
-
-         <form action="{{ url_for('dashboard.saba_haim', part=prev) }}" method="post" style="display: inline;">
-            <input type="submit" class="btn" value="Previous">
-        </form>
-        <form action="{{ url_for('dashboard.saba_haim', part=next) }}" method="post" style="display: inline;">
-            <input type="submit" class="btn" value="Next">
-        </form>
-
-        <br><br>
-
+            <p  style="width:400px;" align="left">
+                When Einat was studying architecture, I was exposed to an article written by Stan Allen about
+                "Field Conditions" or "Condition Fields," which describes the use of architectural domain language to
+                observe ideas as a set of principles that can be manipulated or extended.
+                <br>
+                Articles:
+                <br>
+                <p><a href="https://mycourses.aalto.fi/pluginfile.php/1285101/mod_resource/content/2/Stan%20Allen%2C%20Field%20Conditions%2C%201997.pdf">Field Conditions</a></p>
+                <p><a href="https://marywoodthesisresearch.files.wordpress.com/2014/03/allen_object-to-field-revised.pdf">Object To Field Revised</a></p>
+            </p>
         </div>
 
+        <br>
+        <br>
+        <br>
+
         <div>
-            <h2 class="word">
-                <form action="{{ url_for('auth.log_out') }}" method="post">
-                    <input type="submit" class="btn" value="log out"></br>
-                </form>
-            </h2>
+            <form action="{{ url_for('dashboard.dashboard') }}" method="post">
+                <input type="submit" class="btn" value="Home"></br>
+             </form>
         </div>
 
     </body>

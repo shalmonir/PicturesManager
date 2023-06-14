@@ -50,7 +50,9 @@
     <body>
         <div class="topnav">
             <a href="{{ url_for('dashboard.main_view') }}">Home</a>
-            <a href="{{ url_for('dashboard.saba_haim', part=1) }}"  >Saba Haim Video</a>
+            <a href="{{ url_for('dashboard.saba_haim', part=1) }}" >Saba Haim Video</a>
+            <a href="{{ url_for('dashboard.inspiration_page') }}" >Inspiration</a>
+            <a href="{{ url_for('dashboard.sw_dev_page') }}" >Software Development</a>
             <a href="{{ url_for('dashboard.about') }}" class="split active">About</a>
         </div>
 
@@ -65,11 +67,19 @@
                 Devops position, and I tried to find out what I want to do with my career. It's purpose was getting our
                 hands dirty with software products and modern infrastructure. This product is still in the process of
                 maturing into our family pictures/videos management system. The project include the memory of our
-                grandfather Haim and his holocaust testimony. for any additional content please contact me at:
-                shalmonir@gmail.com .
+                grandfather Haim and his holocaust testimony. For any additional content you want to see here,
+                please contact me at:
+
             </p>
+            <a href = "mailto:shalmonir@gmail.com?subject = Feedback&body = MessageFromPolyzDotClick">
+                Shalmonir
+            </a>
 
         </div>
+
+        <br>
+        <br>
+        <br>
 
         <div>
             <form action="{{ url_for('dashboard.dashboard') }}" method="post">
