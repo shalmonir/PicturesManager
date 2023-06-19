@@ -4,14 +4,14 @@ from flask import Blueprint, redirect, url_for, flash, render_template, request,
 from flask_login import current_user, login_user, logout_user
 
 from src.Configuration.Configuration import ALLOWED_REGISTER_EMAILS
-from src.Context.LocalContext import LocalContext
+from src.Context.AWSContext import AWSContext
 from src.Entities.User import User
 from src.Utils.RequestProcessor import RequestProcessor, REQUEST_USER_NAME, REQUEST_USER_PHRASE, REQUEST_USER_EMAIL
 
 auth = Blueprint('auth', import_name=__name__)
 
 profile = 'local'
-context = LocalContext()
+context = AWSContext()
 
 
 @auth.route('/')
