@@ -8,12 +8,14 @@ class AWSDownloader:
 
     @staticmethod
     def download(path):
-        file = AWSUtil.get_file(path, AWS_FILES_BUCKET)
-        file.seek(0)
-        return file
+        return AWSDownloader.AWS_fetch(path, AWS_FILES_BUCKET)
 
     @staticmethod
     def video(path):
-        file = AWSUtil.get_file(path, AWS_VIDEO_BUCKET)
+        return AWSDownloader.AWS_fetch(path, AWS_VIDEO_BUCKET)
+
+    @staticmethod
+    def AWS_fetch(path, bucket):
+        file = AWSUtil.get_file(path, bucket)
         file.seek(0)
         return file
