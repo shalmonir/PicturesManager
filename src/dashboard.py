@@ -8,6 +8,7 @@ from src.Configuration.Configuration import VIDEO_PARTS
 from src.Context.AWSContext import AWSContext
 from src.Utils.RequestProcessor import RequestProcessor, REQUEST_UPLOAD_NAME, REQUEST_UPLOAD_FILES
 from src.content.ContentSupplier import ContentSupplier
+from src.validators.UploadValidator import UploadValidator
 
 dash = Blueprint('dashboard', import_name=__name__)
 context = AWSContext()
@@ -24,6 +25,8 @@ def dashboard():
 def upload():
     if request.method == 'POST':
         request_internal = RequestProcessor.process_upload_request(request)
+        if not UploadValidator.validate(request_internal):
+            return render_template("error.html", error_msg=f"Upload validation failed")
         files_uploaded, files_failed_upload = \
             context.upload(request_internal[REQUEST_UPLOAD_FILES], request_internal[REQUEST_UPLOAD_NAME], flask_login.current_user)
         return render_template("upload_summary.html",
