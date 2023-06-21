@@ -1,6 +1,6 @@
 # Memories Manager
 
-*Backup, edit and play with family pictures *
+* Backup, edit and play with family pictures *
 
 > Running example at: https://polyz.click/
 
