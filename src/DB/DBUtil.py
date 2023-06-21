@@ -66,3 +66,10 @@ class DBUtil(DBInterface):
     def get_album_pictures_pages_amount(self, album_id: int):
         pictures_amount = len(self.get_pictures_by_album(album_id=album_id))
         return int(pictures_amount / PICTURES_IN_PAGE) + (pictures_amount % PICTURES_IN_PAGE > 0)
+
+    def get_album(self, album_id: int):
+        album_query = self.get_db().session.query(Album).filter(Album.id == album_id).all()
+        if len(album_query) == 0:
+            raise Exception(f"for id {album_id}")
+        else:
+            return album_query[0]

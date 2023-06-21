@@ -10,6 +10,10 @@ REQUEST_USER_NAME = 'username'
 REQUEST_USER_PHRASE = 'user_phrase'
 REQUEST_USER_EMAIL = 'email'
 
+REQUEST_DATA_PHRASE = 'data_phrase'
+REQUEST_DATA_COLLECTION = 'collection'
+REQUEST_DATA_POST_PAYLOAD = 'post_payload'
+
 
 class ProcessRequestException(Exception):
     def __init__(self):
@@ -52,3 +56,23 @@ class RequestProcessor:
         except Exception as e:
             logging.ERROR('register input error: ' + str(e))
             raise ProcessRequestException()
+
+    @staticmethod
+    def process_data_request(data_request: Request) -> dict:
+        try:
+            return {REQUEST_DATA_PHRASE: data_request[REQUEST_DATA_PHRASE],
+                    REQUEST_DATA_COLLECTION: data_request[REQUEST_DATA_COLLECTION]}
+        except Exception as e:
+            logging.ERROR('register input error: ' + str(e))
+            raise ProcessRequestException()
+
+    @staticmethod
+    def process_data_update_request(data_update_request: Request) -> dict:
+        try:
+            return {REQUEST_DATA_PHRASE: data_update_request[REQUEST_DATA_PHRASE],
+                    REQUEST_DATA_COLLECTION: data_update_request[REQUEST_DATA_COLLECTION],
+                    REQUEST_DATA_POST_PAYLOAD: data_update_request[REQUEST_DATA_COLLECTION]}
+        except Exception as e:
+            logging.ERROR('register input error: ' + str(e))
+            raise ProcessRequestException()
+

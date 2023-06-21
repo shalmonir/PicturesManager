@@ -8,6 +8,7 @@ from src.DB.DBConnectionMgr import DBConnectionMgr
 from src.authentication import auth
 from src.aws_serve import aws
 from src.dashboard import dash
+from src.analyze import data_api
 from src.download import download
 from src.external import login_manager, db
 from flask_bootstrap import Bootstrap
@@ -33,6 +34,7 @@ def define_blueprints(app):
     app.register_blueprint(dash)
     app.register_blueprint(download)
     app.register_blueprint(aws)
+    app.register_blueprint(data_api)
 
 
 def define_externals(app):

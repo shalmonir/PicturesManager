@@ -19,6 +19,10 @@ class DBInterface(ABC):
         pass
 
     @abstractmethod
+    def get_album(self, album_id: int):
+        pass
+
+    @abstractmethod
     def get_pictures_by_album(self, album_id: int):
         pass
 
