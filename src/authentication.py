@@ -7,6 +7,7 @@ from src.Configuration.Configuration import ALLOWED_REGISTER_EMAILS
 from src.Context.AWSContext import AWSContext
 from src.Entities.User import User
 from src.Utils.RequestProcessor import RequestProcessor, REQUEST_USER_NAME, REQUEST_USER_PHRASE, REQUEST_USER_EMAIL
+from src.validators.AuthInputSanitizer import AuthInputSanitizer
 
 auth = Blueprint('auth', import_name=__name__)
 
@@ -20,7 +21,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard.dashboard'))
     if request.method == 'POST':
-        login_request = RequestProcessor.process_login_request(request)
+        login_request = AuthInputSanitizer.sanitize_login_request(RequestProcessor.process_login_request(request))
         user = context.get_db_utility().get_user_by_name(login_request[REQUEST_USER_NAME])
         if user is not None and user.password == hashlib.sha3_512((login_request[REQUEST_USER_PHRASE].encode())).hexdigest():
             if login_user(user, False):

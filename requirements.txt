@@ -9,3 +9,4 @@ flask-bootstrap
 sqlalchemy_utils
 boto3
 gunicorn
+bleach
