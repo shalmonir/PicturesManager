@@ -8,7 +8,7 @@ class ContentSupplier:
     def get_simple_web_page_content(part, parts_amount, page):
         part_number = int(part)
         if part_number > parts_amount:
-            part = part % parts_amount
+            part = part_number % parts_amount
         if part_number < 1:
             render_template(page, video_url='Saba_Haim_Part_1.mp4',
                             next='2', prev='0')
