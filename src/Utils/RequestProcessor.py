@@ -14,6 +14,9 @@ REQUEST_DATA_PHRASE = 'data_phrase'
 REQUEST_DATA_COLLECTION = 'collection'
 REQUEST_DATA_POST_PAYLOAD = 'post_payload'
 
+MESSAGE_PICTURE_FILE = 'picture'
+MESSAGE_META_DATA = 'body'
+
 
 class ProcessRequestException(Exception):
     def __init__(self):
@@ -45,7 +48,7 @@ class RequestProcessor:
         try:
             return {ALBUM_KEYWORD: search_request.form[ALBUM_KEYWORD]}
         except Exception as e:
-            logging.ERROR('login input error: ' + str(e))
+            logging.ERROR('search request error: ' + str(e))
             raise ProcessRequestException()
 
     @staticmethod
@@ -63,7 +66,7 @@ class RequestProcessor:
             return {REQUEST_DATA_PHRASE: data_request[REQUEST_DATA_PHRASE],
                     REQUEST_DATA_COLLECTION: data_request[REQUEST_DATA_COLLECTION]}
         except Exception as e:
-            logging.ERROR('register input error: ' + str(e))
+            logging.ERROR('processing data error: ' + str(e))
             raise ProcessRequestException()
 
     @staticmethod
@@ -73,6 +76,15 @@ class RequestProcessor:
                     REQUEST_DATA_COLLECTION: data_update_request[REQUEST_DATA_COLLECTION],
                     REQUEST_DATA_POST_PAYLOAD: data_update_request[REQUEST_DATA_COLLECTION]}
         except Exception as e:
-            logging.ERROR('register input error: ' + str(e))
+            logging.ERROR('processing data update error: ' + str(e))
+            raise ProcessRequestException()
+
+    @staticmethod
+    def process_detect_faces_request(face_detection_request: Request) -> dict:
+        try:
+            return {MESSAGE_META_DATA: face_detection_request[MESSAGE_META_DATA],
+                    MESSAGE_PICTURE_FILE: face_detection_request[MESSAGE_PICTURE_FILE]}
+        except Exception as e:
+            logging.ERROR('processing request failed: ' + str(e))
             raise ProcessRequestException()
 
